@@ -1,0 +1,7 @@
+require("@nomicfoundation/hardhat-ethers");
+
+const PRIVATE_KEY = "74c676ce02b2b57d32d385f5efd63f99d79d006ef9e0e5e98721b5bdf12421c3";
+
+module.exports = {
+  solidity: "0.8.19",
+};

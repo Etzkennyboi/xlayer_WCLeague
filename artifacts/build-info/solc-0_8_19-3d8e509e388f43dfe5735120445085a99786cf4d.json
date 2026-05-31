@@ -1,0 +1,42 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_19-3d8e509e388f43dfe5735120445085a99786cf4d",
+  "solcVersion": "0.8.19",
+  "solcLongVersion": "0.8.19+commit.7dd6d404",
+  "compilerType": "solc",
+  "userSourceNameMap": {
+    "contracts/PredictionMarket.sol": "project/contracts/PredictionMarket.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "paris",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/PredictionMarket.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\n/**\n * @title IERC20\n * @dev Basic ERC20 Interface for USDT0 transactions.\n */\ninterface IERC20 {\n    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);\n    function transfer(address recipient, uint256 amount) external returns (bool);\n    function balanceOf(address account) external view returns (uint256);\n}\n\n/**\n * @title PredictionMarket\n * @dev A fully functional Web3 Prediction Market for X-Cup. \n * Allows users to place bets on 1X2 outcomes in USDT0 and claim winnings after the Oracle resolves the market.\n */\ncontract PredictionMarket {\n    \n    address public owner;\n    address public oracleNode; // The address authorized to resolve markets (e.g., pulling from RapidAPI)\n    IERC20 public usdt0Token;  // The USDT0 token standard\n\n    // Unified MatchOutcome aligned directly with the JavaScript mapping\n    enum MatchOutcome { UNRESOLVED, HOME_WIN, AWAY_WIN, DRAW }\n\n    struct Market {\n        string fixtureId;\n        MatchOutcome outcome;\n        bool isResolved;\n        uint256 totalHomePool;\n        uint256 totalDrawPool;\n        uint256 totalAwayPool;\n    }\n\n    struct Bet {\n        MatchOutcome selection;\n        uint256 amount;\n        bool claimed;\n    }\n\n    // Mapping from fixtureId string to Market data\n    mapping(string => Market) public markets;\n    \n    // Mapping from fixtureId => userAddress => Bet\n    mapping(string => mapping(address => Bet)) public bets;\n\n    event MarketCreated(string fixtureId);\n    event BetPlaced(address indexed user, string fixtureId, MatchOutcome selection, uint256 amount);\n    event MarketResolved(string fixtureId, MatchOutcome winningOutcome);\n    event WinningsClaimed(address indexed user, string fixtureId, uint256 amount);\n\n    modifier onlyOwner() {\n        require(msg.sender == owner, \"Only owner can call this\");\n        _;\n    }\n\n    modifier onlyOracle() {\n        require(msg.sender == oracleNode, \"Only oracle node can call this\");\n        _;\n    }\n\n    constructor(address _oracleNode, address _usdt0Token) {\n        owner = msg.sender;\n        oracleNode = _oracleNode;\n        usdt0Token = IERC20(_usdt0Token);\n    }\n\n    /**\n     * @dev Creates a new betting market for a fixture\n     */\n    function createMarket(string memory _fixtureId) external onlyOwner {\n        require(bytes(markets[_fixtureId].fixtureId).length == 0, \"Market already exists\");\n        \n        markets[_fixtureId] = Market({\n            fixtureId: _fixtureId,\n            outcome: MatchOutcome.UNRESOLVED,\n            isResolved: false,\n            totalHomePool: 0,\n            totalDrawPool: 0,\n            totalAwayPool: 0\n        });\n\n        emit MarketCreated(_fixtureId);\n    }\n\n    /**\n     * @dev Places a bet on a specific outcome using USDT0 tokens.\n     */\n    function placeBet(string memory _fixtureId, MatchOutcome _selection, uint256 _amount) external {\n        require(_amount > 0, \"Stake must be greater than 0\");\n        require(bytes(markets[_fixtureId].fixtureId).length > 0, \"Market does not exist\");\n        require(!markets[_fixtureId].isResolved, \"Market already resolved\");\n        require(_selection != MatchOutcome.UNRESOLVED, \"Invalid selection\");\n        require(bets[_fixtureId][msg.sender].amount == 0, \"Already placed a bet on this market\");\n\n        // Pull USDT0 tokens from user's wallet (requires pre-approval)\n        require(usdt0Token.transferFrom(msg.sender, address(this), _amount), \"USDT0 transfer failed\");\n\n        if (_selection == MatchOutcome.HOME_WIN) {\n            markets[_fixtureId].totalHomePool += _amount;\n        } else if (_selection == MatchOutcome.AWAY_WIN) {\n            markets[_fixtureId].totalAwayPool += _amount;\n        } else if (_selection == MatchOutcome.DRAW) {\n            markets[_fixtureId].totalDrawPool += _amount;\n        }\n\n        bets[_fixtureId][msg.sender] = Bet({\n            selection: _selection,\n            amount: _amount,\n            claimed: false\n        });\n\n        emit BetPlaced(msg.sender, _fixtureId, _selection, _amount);\n    }\n\n    /**\n     * @dev Resolves the market. Only callable by the authorized Oracle Node.\n     */\n    function resolveMarket(string memory _fixtureId, MatchOutcome _winningOutcome) external onlyOracle {\n        require(bytes(markets[_fixtureId].fixtureId).length > 0, \"Market does not exist\");\n        require(!markets[_fixtureId].isResolved, \"Market already resolved\");\n        require(_winningOutcome != MatchOutcome.UNRESOLVED, \"Invalid winning outcome\");\n\n        markets[_fixtureId].outcome = _winningOutcome;\n        markets[_fixtureId].isResolved = true;\n\n        emit MarketResolved(_fixtureId, _winningOutcome);\n    }\n\n    /**\n     * @dev Claims USDT0 winnings for a resolved market based on pari-mutuel pool calculations.\n     */\n    function claimWinnings(string memory _fixtureId) external {\n        require(markets[_fixtureId].isResolved, \"Market not yet resolved\");\n        \n        Bet storage userBet = bets[_fixtureId][msg.sender];\n        require(userBet.amount > 0, \"No bet placed\");\n        require(!userBet.claimed, \"Winnings already claimed\");\n        require(userBet.selection == markets[_fixtureId].outcome, \"Bet lost\");\n\n        userBet.claimed = true;\n\n        uint256 totalPool = markets[_fixtureId].totalHomePool + markets[_fixtureId].totalDrawPool + markets[_fixtureId].totalAwayPool;\n        uint256 winningPool = 0;\n\n        if (markets[_fixtureId].outcome == MatchOutcome.HOME_WIN) {\n            winningPool = markets[_fixtureId].totalHomePool;\n        } else if (markets[_fixtureId].outcome == MatchOutcome.AWAY_WIN) {\n            winningPool = markets[_fixtureId].totalAwayPool;\n        } else if (markets[_fixtureId].outcome == MatchOutcome.DRAW) {\n            winningPool = markets[_fixtureId].totalDrawPool;\n        }\n\n        // Calculate payout: (User Stake / Winning Pool) * Total Pool (minus 2% platform fee)\n        uint256 grossPayout = (userBet.amount * totalPool) / winningPool;\n        uint256 platformFee = (grossPayout * 2) / 100;\n        uint256 netPayout = grossPayout - platformFee;\n\n        // Disburse USDT0 winnings securely to user\n        require(usdt0Token.transfer(msg.sender, netPayout), \"USDT0 transfer failed\");\n\n        emit WinningsClaimed(msg.sender, _fixtureId, netPayout);\n    }\n}\n"
+      }
+    }
+  }
+}

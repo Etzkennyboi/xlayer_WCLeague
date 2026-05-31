@@ -1,0 +1,8616 @@
+module.exports = [
+"[project]/src/engine/GameState.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// ==================== COMPLETE GAME STATE ====================
+__turbopack_context__.s([
+    "initialGameState",
+    ()=>initialGameState
+]);
+const initialGameState = {
+    // Game flow
+    gameStarted: false,
+    season: 1,
+    round: 1,
+    // Onboarding
+    onboardingStep: 0,
+    selectedContinent: null,
+    username: '',
+    // Manager core
+    budget: 5000000,
+    playerTeamIndex: 0,
+    teams: [],
+    fixtures: [],
+    // Squad management
+    selectedLineup: [],
+    liveSim: {
+        active: false,
+        minute: 0,
+        scores: {},
+        playerMatchEvents: [],
+        timeline: [],
+        allResults: null,
+        playerMatchResult: null,
+        matchIncome: 0,
+        halfTimePause: false
+    },
+    trainingQueue: [],
+    selectedTrainingType: null,
+    // Match state
+    showMatchModal: false,
+    lastMatchResult: null,
+    showSeasonEnd: false,
+    seasonEndResult: null,
+    // Betting — Bet Slip system
+    markets: [],
+    betSlip: [],
+    activeBets: [],
+    lastPredictionResult: null,
+    // Web3 state
+    wallet: {
+        connected: false,
+        address: null,
+        chainId: null,
+        balance: '0'
+    },
+    web3Bets: [],
+    // NFT trophies
+    nftBadges: [],
+    pendingMints: [],
+    // Streaks (for NFT triggers)
+    winStreak: 0,
+    oracleStreak: 0,
+    // PK Shootout stats
+    pkShooterStats: {
+        totalPlayed: 0,
+        totalWins: 0,
+        totalGoals: 0,
+        bestScore: 0,
+        winStreak: 0
+    },
+    // Notifications / Toasts
+    toasts: [] // [{ id, message, type: 'success'|'error'|'info' }]
+};
+}),
+"[project]/src/engine/Data.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// ==================== GLOBAL LEAGUE DATA (48 TEAMS) ====================
+__turbopack_context__.s([
+    "RANDOM_EVENTS",
+    ()=>RANDOM_EVENTS,
+    "SPONSOR_TYPES",
+    ()=>SPONSOR_TYPES,
+    "TEAMS",
+    ()=>TEAMS,
+    "TRAINING_CONFIG",
+    ()=>TRAINING_CONFIG,
+    "getSponsorTypeName",
+    ()=>getSponsorTypeName
+]);
+const TEAMS = [
+    {
+        name: "Argentina",
+        abbr: "ARG",
+        code: "ar",
+        continent: "South America"
+    },
+    {
+        name: "France",
+        abbr: "FRA",
+        code: "fr",
+        continent: "Europe"
+    },
+    {
+        name: "England",
+        abbr: "ENG",
+        code: "gb-eng",
+        continent: "Europe"
+    },
+    {
+        name: "Brazil",
+        abbr: "BRA",
+        code: "br",
+        continent: "South America"
+    },
+    {
+        name: "Spain",
+        abbr: "ESP",
+        code: "es",
+        continent: "Europe"
+    },
+    {
+        name: "Portugal",
+        abbr: "POR",
+        code: "pt",
+        continent: "Europe"
+    },
+    {
+        name: "Germany",
+        abbr: "GER",
+        code: "de",
+        continent: "Europe"
+    },
+    {
+        name: "Italy",
+        abbr: "ITA",
+        code: "it",
+        continent: "Europe"
+    },
+    {
+        name: "Netherlands",
+        abbr: "NED",
+        code: "nl",
+        continent: "Europe"
+    },
+    {
+        name: "Croatia",
+        abbr: "CRO",
+        code: "hr",
+        continent: "Europe"
+    },
+    {
+        name: "Uruguay",
+        abbr: "URU",
+        code: "uy",
+        continent: "South America"
+    },
+    {
+        name: "USA",
+        abbr: "USA",
+        code: "us",
+        continent: "North America"
+    },
+    {
+        name: "Colombia",
+        abbr: "COL",
+        code: "co",
+        continent: "South America"
+    },
+    {
+        name: "Belgium",
+        abbr: "BEL",
+        code: "be",
+        continent: "Europe"
+    },
+    {
+        name: "Japan",
+        abbr: "JPN",
+        code: "jp",
+        continent: "Asia"
+    },
+    {
+        name: "Senegal",
+        abbr: "SEN",
+        code: "sn",
+        continent: "Africa"
+    },
+    {
+        name: "Morocco",
+        abbr: "MAR",
+        code: "ma",
+        continent: "Africa"
+    },
+    {
+        name: "South Korea",
+        abbr: "KOR",
+        code: "kr",
+        continent: "Asia"
+    },
+    {
+        name: "Mexico",
+        abbr: "MEX",
+        code: "mx",
+        continent: "North America"
+    },
+    {
+        name: "Canada",
+        abbr: "CAN",
+        code: "ca",
+        continent: "North America"
+    },
+    {
+        name: "Switzerland",
+        abbr: "SUI",
+        code: "ch",
+        continent: "Europe"
+    },
+    {
+        name: "Denmark",
+        abbr: "DEN",
+        code: "dk",
+        continent: "Europe"
+    },
+    {
+        name: "Sweden",
+        abbr: "SWE",
+        code: "se",
+        continent: "Europe"
+    },
+    {
+        name: "Serbia",
+        abbr: "SRB",
+        code: "rs",
+        continent: "Europe"
+    },
+    {
+        name: "Poland",
+        abbr: "POL",
+        code: "pl",
+        continent: "Europe"
+    },
+    {
+        name: "Iran",
+        abbr: "IRN",
+        code: "ir",
+        continent: "Asia"
+    },
+    {
+        name: "Australia",
+        abbr: "AUS",
+        code: "au",
+        continent: "Oceania"
+    },
+    {
+        name: "Egypt",
+        abbr: "EGY",
+        code: "eg",
+        continent: "Africa"
+    },
+    {
+        name: "Nigeria",
+        abbr: "NGA",
+        code: "ng",
+        continent: "Africa"
+    },
+    {
+        name: "Ghana",
+        abbr: "GHA",
+        code: "gh",
+        continent: "Africa"
+    },
+    {
+        name: "Cameroon",
+        abbr: "CMR",
+        code: "cm",
+        continent: "Africa"
+    },
+    {
+        name: "Ivory Coast",
+        abbr: "CIV",
+        code: "ci",
+        continent: "Africa"
+    },
+    {
+        name: "Tunisia",
+        abbr: "TUN",
+        code: "tn",
+        continent: "Africa"
+    },
+    {
+        name: "Saudi Arabia",
+        abbr: "KSA",
+        code: "sa",
+        continent: "Asia"
+    },
+    {
+        name: "Qatar",
+        abbr: "QAT",
+        code: "qa",
+        continent: "Asia"
+    },
+    {
+        name: "UAE",
+        abbr: "UAE",
+        code: "ae",
+        continent: "Asia"
+    },
+    {
+        name: "China",
+        abbr: "CHN",
+        code: "cn",
+        continent: "Asia"
+    },
+    {
+        name: "India",
+        abbr: "IND",
+        code: "in",
+        continent: "Asia"
+    },
+    {
+        name: "Peru",
+        abbr: "PER",
+        code: "pe",
+        continent: "South America"
+    },
+    {
+        name: "Chile",
+        abbr: "CHI",
+        code: "cl",
+        continent: "South America"
+    },
+    {
+        name: "Ecuador",
+        abbr: "ECU",
+        code: "ec",
+        continent: "South America"
+    },
+    {
+        name: "Venezuela",
+        abbr: "VEN",
+        code: "ve",
+        continent: "South America"
+    },
+    {
+        name: "Paraguay",
+        abbr: "PAR",
+        code: "py",
+        continent: "South America"
+    },
+    {
+        name: "Bolivia",
+        abbr: "BOL",
+        code: "bo",
+        continent: "South America"
+    },
+    {
+        name: "New Zealand",
+        abbr: "NZL",
+        code: "nz",
+        continent: "Oceania"
+    },
+    {
+        name: "Costa Rica",
+        abbr: "CRC",
+        code: "cr",
+        continent: "North America"
+    },
+    {
+        name: "Panama",
+        abbr: "PAN",
+        code: "pa",
+        continent: "North America"
+    },
+    {
+        name: "Jamaica",
+        abbr: "JAM",
+        code: "jm",
+        continent: "North America"
+    }
+];
+const SPONSOR_TYPES = [
+    'shirt',
+    'stadium',
+    'tv',
+    'digital'
+];
+function getSponsorTypeName(type) {
+    const names = {
+        'shirt': '👕 Shirt Sponsor',
+        'stadium': '🏟️ Stadium Rights',
+        'tv': '📺 Broadcasting Rights',
+        'digital': '📱 Digital Partnership'
+    };
+    return names[type] || type;
+}
+const RANDOM_EVENTS = [
+    {
+        title: "Training Ground Upgrade",
+        message: "Local council funded new facilities. Morale up!",
+        effect: {
+            conditionAll: 15
+        },
+        type: "positive"
+    },
+    {
+        title: "Viral Sensation",
+        message: "Team video went viral. Merchandise sales spiked!",
+        effect: {
+            budget: 250000
+        },
+        type: "positive"
+    },
+    {
+        title: "Food Poisoning",
+        message: "Bad lasagna at the team hotel. Energy levels drop.",
+        effect: {
+            energyAll: -20
+        },
+        type: "negative"
+    },
+    {
+        title: "Tax Audit",
+        message: "Unexpected tax bill from the federation.",
+        effect: {
+            budget: -150000
+        },
+        type: "negative"
+    }
+];
+const TRAINING_CONFIG = {
+    'physical': {
+        cost: 50000,
+        strengthGain: 1,
+        energyCost: 20
+    },
+    'tactical': {
+        cost: 75000,
+        strengthGain: 2,
+        energyCost: 15
+    },
+    'intensive': {
+        cost: 120000,
+        strengthGain: 3,
+        energyCost: 35
+    }
+};
+}),
+"[project]/src/engine/Players.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "calculatePlayerValue",
+    ()=>calculatePlayerValue,
+    "generatePlayer",
+    ()=>generatePlayer,
+    "generatePlayerId",
+    ()=>generatePlayerId,
+    "generateSquad",
+    ()=>generateSquad,
+    "generateTeams",
+    ()=>generateTeams
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$Data$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/engine/Data.js [app-ssr] (ecmascript)");
+;
+// Hardcoded real squads for the top teams
+const REAL_SQUADS = {
+    "Argentina": [
+        {
+            name: "E. Martinez",
+            pos: "GK",
+            str: 88,
+            age: 31
+        },
+        {
+            name: "G. Rulli",
+            pos: "GK",
+            str: 82,
+            age: 31
+        },
+        {
+            name: "C. Romero",
+            pos: "DEF",
+            str: 87,
+            age: 26
+        },
+        {
+            name: "L. Martinez",
+            pos: "DEF",
+            str: 86,
+            age: 26
+        },
+        {
+            name: "N. Otamendi",
+            pos: "DEF",
+            str: 83,
+            age: 36
+        },
+        {
+            name: "N. Molina",
+            pos: "DEF",
+            str: 84,
+            age: 26
+        },
+        {
+            name: "M. Acuna",
+            pos: "DEF",
+            str: 83,
+            age: 32
+        },
+        {
+            name: "N. Tagliafico",
+            pos: "DEF",
+            str: 82,
+            age: 31
+        },
+        {
+            name: "E. Fernandez",
+            pos: "MID",
+            str: 87,
+            age: 23
+        },
+        {
+            name: "A. Mac Allister",
+            pos: "MID",
+            str: 86,
+            age: 25
+        },
+        {
+            name: "R. De Paul",
+            pos: "MID",
+            str: 85,
+            age: 29
+        },
+        {
+            name: "G. Lo Celso",
+            pos: "MID",
+            str: 83,
+            age: 28
+        },
+        {
+            name: "L. Paredes",
+            pos: "MID",
+            str: 82,
+            age: 29
+        },
+        {
+            name: "L. Messi",
+            pos: "FWD",
+            str: 94,
+            age: 36
+        },
+        {
+            name: "L. Martinez",
+            pos: "FWD",
+            str: 88,
+            age: 26
+        },
+        {
+            name: "J. Alvarez",
+            pos: "FWD",
+            str: 87,
+            age: 24
+        },
+        {
+            name: "A. Di Maria",
+            pos: "FWD",
+            str: 84,
+            age: 36
+        },
+        {
+            name: "A. Garnacho",
+            pos: "FWD",
+            str: 83,
+            age: 19
+        }
+    ],
+    "France": [
+        {
+            name: "M. Maignan",
+            pos: "GK",
+            str: 88,
+            age: 28
+        },
+        {
+            name: "B. Pavard",
+            pos: "DEF",
+            str: 85,
+            age: 28
+        },
+        {
+            name: "D. Upamecano",
+            pos: "DEF",
+            str: 86,
+            age: 25
+        },
+        {
+            name: "W. Saliba",
+            pos: "DEF",
+            str: 87,
+            age: 23
+        },
+        {
+            name: "T. Hernandez",
+            pos: "DEF",
+            str: 86,
+            age: 26
+        },
+        {
+            name: "J. Kounde",
+            pos: "DEF",
+            str: 85,
+            age: 25
+        },
+        {
+            name: "A. Tchouameni",
+            pos: "MID",
+            str: 87,
+            age: 24
+        },
+        {
+            name: "E. Camavinga",
+            pos: "MID",
+            str: 86,
+            age: 21
+        },
+        {
+            name: "A. Rabiot",
+            pos: "MID",
+            str: 84,
+            age: 29
+        },
+        {
+            name: "A. Griezmann",
+            pos: "MID",
+            str: 88,
+            age: 33
+        },
+        {
+            name: "K. Mbappe",
+            pos: "FWD",
+            str: 95,
+            age: 25
+        },
+        {
+            name: "O. Dembele",
+            pos: "FWD",
+            str: 86,
+            age: 27
+        },
+        {
+            name: "O. Giroud",
+            pos: "FWD",
+            str: 83,
+            age: 37
+        },
+        {
+            name: "M. Thuram",
+            pos: "FWD",
+            str: 84,
+            age: 26
+        }
+    ],
+    "England": [
+        {
+            name: "J. Pickford",
+            pos: "GK",
+            str: 84,
+            age: 30
+        },
+        {
+            name: "K. Walker",
+            pos: "DEF",
+            str: 86,
+            age: 34
+        },
+        {
+            name: "J. Stones",
+            pos: "DEF",
+            str: 87,
+            age: 30
+        },
+        {
+            name: "H. Maguire",
+            pos: "DEF",
+            str: 83,
+            age: 31
+        },
+        {
+            name: "L. Shaw",
+            pos: "DEF",
+            str: 84,
+            age: 28
+        },
+        {
+            name: "D. Rice",
+            pos: "MID",
+            str: 88,
+            age: 25
+        },
+        {
+            name: "J. Bellingham",
+            pos: "MID",
+            str: 92,
+            age: 20
+        },
+        {
+            name: "P. Foden",
+            pos: "MID",
+            str: 89,
+            age: 24
+        },
+        {
+            name: "T. Alexander-Arnold",
+            pos: "MID",
+            str: 86,
+            age: 25
+        },
+        {
+            name: "B. Saka",
+            pos: "FWD",
+            str: 89,
+            age: 22
+        },
+        {
+            name: "H. Kane",
+            pos: "FWD",
+            str: 91,
+            age: 30
+        },
+        {
+            name: "O. Watkins",
+            pos: "FWD",
+            str: 85,
+            age: 28
+        }
+    ],
+    "Brazil": [
+        {
+            name: "Alisson",
+            pos: "GK",
+            str: 89,
+            age: 31
+        },
+        {
+            name: "Ederson",
+            pos: "GK",
+            str: 88,
+            age: 30
+        },
+        {
+            name: "Marquinhos",
+            pos: "DEF",
+            str: 87,
+            age: 30
+        },
+        {
+            name: "Eder Militao",
+            pos: "DEF",
+            str: 86,
+            age: 26
+        },
+        {
+            name: "Gabriel",
+            pos: "DEF",
+            str: 85,
+            age: 26
+        },
+        {
+            name: "Danilo",
+            pos: "DEF",
+            str: 83,
+            age: 32
+        },
+        {
+            name: "Casemiro",
+            pos: "MID",
+            str: 86,
+            age: 32
+        },
+        {
+            name: "B. Guimaraes",
+            pos: "MID",
+            str: 87,
+            age: 26
+        },
+        {
+            name: "L. Paqueta",
+            pos: "MID",
+            str: 85,
+            age: 26
+        },
+        {
+            name: "Vinicius Jr",
+            pos: "FWD",
+            str: 92,
+            age: 23
+        },
+        {
+            name: "Rodrygo",
+            pos: "FWD",
+            str: 88,
+            age: 23
+        },
+        {
+            name: "Raphinha",
+            pos: "FWD",
+            str: 85,
+            age: 27
+        },
+        {
+            name: "Endrick",
+            pos: "FWD",
+            str: 82,
+            age: 17
+        }
+    ]
+};
+const FIRST_NAMES = [
+    "Alex",
+    "Ben",
+    "Carlos",
+    "David",
+    "Enzo",
+    "Felix",
+    "Gabriel",
+    "Hugo",
+    "Ivan",
+    "Jack",
+    "Kevin",
+    "Leo",
+    "Max",
+    "Nico",
+    "Oscar",
+    "Pablo",
+    "Quinn",
+    "Ryan",
+    "Sam",
+    "Tom",
+    "Victor",
+    "Will",
+    "Xavi",
+    "Yuri",
+    "Zack"
+];
+const LAST_NAMES = [
+    "Smith",
+    "Jones",
+    "Williams",
+    "Brown",
+    "Taylor",
+    "Silva",
+    "Garcia",
+    "Martinez",
+    "Rossi",
+    "Muller",
+    "Dubois",
+    "Santos",
+    "Kim",
+    "Lee",
+    "Chen",
+    "Wang",
+    "Singh",
+    "Ali",
+    "Ivanov",
+    "Novak",
+    "Costa",
+    "Gomez",
+    "Kowalski",
+    "Okafor",
+    "Mensah"
+];
+function generatePlayerId() {
+    return Math.random().toString(36).substr(2, 9);
+}
+function calculatePlayerValue(player) {
+    let baseValue = Math.pow(player.strength, 3) * 10;
+    if (player.age < 23) baseValue *= 1.5;
+    else if (player.age > 30) baseValue *= 0.6;
+    return Math.floor(baseValue);
+}
+function generatePlayer(pos, tier) {
+    const fn = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
+    const ln = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
+    const minStr = tier === 1 ? 80 : tier === 2 ? 75 : 70;
+    const maxStr = tier === 1 ? 92 : tier === 2 ? 85 : 80;
+    const strength = Math.floor(Math.random() * (maxStr - minStr + 1)) + minStr;
+    const age = 17 + Math.floor(Math.random() * 18);
+    const player = {
+        id: generatePlayerId(),
+        name: `${fn[0]}. ${ln}`,
+        position: pos,
+        age: age,
+        strength: strength,
+        energy: 100,
+        condition: 100,
+        inTraining: false
+    };
+    player.value = calculatePlayerValue(player);
+    return player;
+}
+function generateSquad(teamName, tier) {
+    const squad = [];
+    if (REAL_SQUADS[teamName]) {
+        const realPlayers = REAL_SQUADS[teamName];
+        realPlayers.forEach((rp)=>{
+            const player = {
+                id: generatePlayerId(),
+                name: rp.name,
+                position: rp.pos,
+                age: rp.age,
+                strength: rp.str,
+                energy: 100,
+                condition: 100,
+                inTraining: false
+            };
+            player.value = calculatePlayerValue(player);
+            squad.push(player);
+        });
+    }
+    const currentCounts = {
+        GK: 0,
+        DEF: 0,
+        MID: 0,
+        FWD: 0
+    };
+    squad.forEach((p)=>currentCounts[p.position]++);
+    const needed = {
+        GK: 2,
+        DEF: 6,
+        MID: 6,
+        FWD: 6
+    };
+    Object.keys(needed).forEach((pos)=>{
+        while(currentCounts[pos] < needed[pos]){
+            squad.push(generatePlayer(pos, tier));
+            currentCounts[pos]++;
+        }
+    });
+    return squad;
+}
+function generateTeams() {
+    return __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$Data$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TEAMS"].map((team, index)=>{
+        let tier = 3;
+        if (index < 5) tier = 1;
+        else if (index < 15) tier = 2;
+        return {
+            id: index,
+            name: team.name,
+            abbr: team.abbr,
+            code: team.code,
+            continent: team.continent,
+            players: generateSquad(team.name, tier),
+            stats: {
+                played: 0,
+                won: 0,
+                drawn: 0,
+                lost: 0,
+                goalsFor: 0,
+                goalsAgainst: 0,
+                points: 0
+            }
+        };
+    });
+}
+}),
+"[project]/src/engine/MatchSim.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "calculateTeamStrength",
+    ()=>calculateTeamStrength,
+    "generateFixtures",
+    ()=>generateFixtures,
+    "generateRoundTimeline",
+    ()=>generateRoundTimeline,
+    "simulateMatch",
+    ()=>simulateMatch
+]);
+function generateFixtures(teams) {
+    const numTeams = teams.length;
+    const rounds = numTeams - 1;
+    const halfSize = numTeams / 2;
+    let fixtures = [];
+    let indices = teams.map((t)=>t.id);
+    for(let round = 0; round < rounds; round++){
+        const roundFixtures = [];
+        for(let i = 0; i < halfSize; i++){
+            const home = indices[i];
+            const away = indices[numTeams - 1 - i];
+            if (round % 2 === 0) {
+                roundFixtures.push({
+                    home,
+                    away,
+                    homeGoals: null,
+                    awayGoals: null,
+                    played: false
+                });
+            } else {
+                roundFixtures.push({
+                    home: away,
+                    away: home,
+                    homeGoals: null,
+                    awayGoals: null,
+                    played: false
+                });
+            }
+        }
+        fixtures.push(roundFixtures);
+        indices.splice(1, 0, indices.pop());
+    }
+    return fixtures;
+}
+function calculateTeamStrength(team, selectedLineup = null) {
+    let players;
+    if (selectedLineup && selectedLineup.length > 0) {
+        players = team.players.filter((p)=>selectedLineup.includes(p.id));
+    } else {
+        players = [
+            ...team.players
+        ].sort((a, b)=>b.strength - a.strength).slice(0, 11);
+    }
+    while(players.length < 11){
+        const avgStrength = players.reduce((sum, p)=>sum + p.strength, 0) / players.length || 30;
+        players.push({
+            strength: avgStrength * 0.5,
+            energy: 50,
+            condition: 50
+        });
+    }
+    const totalStrength = players.reduce((sum, p)=>{
+        const energyFactor = 0.7 + p.energy / 100 * 0.3;
+        const conditionFactor = 0.8 + p.condition / 100 * 0.2;
+        return sum + p.strength * energyFactor * conditionFactor;
+    }, 0);
+    return totalStrength / 11;
+}
+const GOAL_DESCRIPTIONS = [
+    'brilliant strike',
+    'tap-in from close range',
+    'header from corner',
+    'counter attack',
+    'penalty kick',
+    'long-range screamer',
+    'free kick',
+    'solo run',
+    'clinical finish',
+    'volley from the edge of the box'
+];
+const FLUFF_EVENTS = [
+    {
+        type: 'chance',
+        desc: 'shots wide from a good position'
+    },
+    {
+        type: 'chance',
+        desc: 'forces a great save from the keeper'
+    },
+    {
+        type: 'chance',
+        desc: 'hits the woodwork!'
+    },
+    {
+        type: 'foul',
+        desc: 'commits a clumsy foul'
+    },
+    {
+        type: 'corner',
+        desc: 'wins a corner kick'
+    },
+    {
+        type: 'var',
+        desc: 'VAR check for a penalty... no penalty given'
+    }
+];
+// Poisson distribution random number generator
+function poissonRandom(lambda) {
+    let L = Math.exp(-lambda);
+    let k = 0;
+    let p = 1;
+    do {
+        k++;
+        p *= Math.random();
+    }while (p > L)
+    return k - 1;
+}
+function simulateMatch(homeTeam, awayTeam, homeIsPlayer, awayIsPlayer, selectedLineup) {
+    const homeStrength = calculateTeamStrength(homeTeam, homeIsPlayer ? selectedLineup : null);
+    const awayStrength = calculateTeamStrength(awayTeam, awayIsPlayer ? selectedLineup : null);
+    // Calculate Strength Differential
+    // 1.0 means teams are perfectly equal. 1.2 means Home is 20% stronger.
+    const homeAdvantage = 1.05; // Base home field advantage
+    const strengthRatio = homeStrength * homeAdvantage / awayStrength;
+    // Base Expected Goals (xG) for an average match is around 1.4 for Home, 1.1 for Away
+    let homeXG = 1.4 * strengthRatio;
+    let awayXG = 1.1 / strengthRatio;
+    // Small chance for a "Blowout/Crazy Match" modifier (as requested by user)
+    if (Math.random() < 0.05) {
+        // 5% chance the stronger team just goes absolutely wild
+        if (homeXG > awayXG) homeXG += 1.5 + Math.random() * 2;
+        else awayXG += 1.5 + Math.random() * 2;
+    }
+    // Cap extreme outliers
+    homeXG = Math.max(0.1, Math.min(homeXG, 5.0));
+    awayXG = Math.max(0.1, Math.min(awayXG, 5.0));
+    // Generate actual goals using Poisson Distribution
+    let homeGoals = poissonRandom(homeXG);
+    let awayGoals = poissonRandom(awayXG);
+    // Generate match events timeline
+    const events = [];
+    const getPlayer = (team, isGoal = false)=>{
+        const candidates = isGoal ? team.players.filter((p)=>p.position === 'FWD' || p.position === 'MID') : team.players;
+        return candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)].name : 'Unknown';
+    };
+    // Helper to generate unique minute (avoid overlapping too many events in same minute)
+    const usedMinutes = new Set();
+    const getMinute = ()=>{
+        let m;
+        do {
+            m = Math.floor(Math.random() * 90) + 1;
+        }while (usedMinutes.has(m) && usedMinutes.size < 90)
+        usedMinutes.add(m);
+        return m;
+    };
+    // Goals
+    for(let i = 0; i < homeGoals; i++){
+        events.push({
+            minute: getMinute(),
+            type: 'goal',
+            side: 'home',
+            player: getPlayer(homeTeam, true),
+            desc: GOAL_DESCRIPTIONS[Math.floor(Math.random() * GOAL_DESCRIPTIONS.length)]
+        });
+    }
+    for(let i = 0; i < awayGoals; i++){
+        events.push({
+            minute: getMinute(),
+            type: 'goal',
+            side: 'away',
+            player: getPlayer(awayTeam, true),
+            desc: GOAL_DESCRIPTIONS[Math.floor(Math.random() * GOAL_DESCRIPTIONS.length)]
+        });
+    }
+    // Cards
+    const numCards = Math.floor(Math.random() * 4);
+    for(let i = 0; i < numCards; i++){
+        const side = Math.random() > 0.5 ? 'home' : 'away';
+        events.push({
+            minute: getMinute(),
+            type: 'yellow',
+            side,
+            player: getPlayer(side === 'home' ? homeTeam : awayTeam),
+            desc: 'tactical foul'
+        });
+    }
+    // Fluff Events (to make commentary lively)
+    const numFluff = Math.floor(Math.random() * 6) + 3; // 3-8 fluff events
+    for(let i = 0; i < numFluff; i++){
+        const side = Math.random() > 0.5 ? 'home' : 'away';
+        const f = FLUFF_EVENTS[Math.floor(Math.random() * FLUFF_EVENTS.length)];
+        events.push({
+            minute: getMinute(),
+            type: f.type,
+            side,
+            player: getPlayer(side === 'home' ? homeTeam : awayTeam),
+            desc: f.desc
+        });
+    }
+    // Sort events chronologically
+    events.sort((a, b)=>a.minute - b.minute);
+    return {
+        homeGoals,
+        awayGoals,
+        events
+    };
+}
+function generateRoundTimeline(fixtures, newTeams, playerTeamIndex, selectedLineup) {
+    let globalTimeline = [];
+    let playerMatchResult = null;
+    let matchIncome = 0;
+    const allResults = fixtures.map((fixture)=>{
+        const homeTeam = newTeams[fixture.home];
+        const awayTeam = newTeams[fixture.away];
+        const homeIsPlayer = fixture.home === playerTeamIndex;
+        const awayIsPlayer = fixture.away === playerTeamIndex;
+        const result = simulateMatch(homeTeam, awayTeam, homeIsPlayer, awayIsPlayer, selectedLineup);
+        // Map events to include match identifier
+        const matchId = `${fixture.home}-${fixture.away}`;
+        const matchEvents = result.events.map((e)=>({
+                ...e,
+                matchId,
+                homeId: fixture.home,
+                awayId: fixture.away
+            }));
+        globalTimeline = globalTimeline.concat(matchEvents);
+        fixture.homeGoals = result.homeGoals;
+        fixture.awayGoals = result.awayGoals;
+        fixture.events = result.events;
+        fixture.played = true;
+        if (homeIsPlayer || awayIsPlayer) {
+            playerMatchResult = {
+                fixture,
+                homeTeam,
+                awayTeam,
+                result,
+                homeIsPlayer
+            };
+            matchIncome = homeIsPlayer ? 1200000 : 400000;
+        }
+        return {
+            homeTeam,
+            awayTeam,
+            result,
+            fixture,
+            matchId
+        };
+    });
+    globalTimeline.sort((a, b)=>a.minute - b.minute);
+    return {
+        allResults,
+        playerMatchResult,
+        globalTimeline,
+        matchIncome
+    };
+}
+}),
+"[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "GameProvider",
+    ()=>GameProvider,
+    "useGame",
+    ()=>useGame
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$GameState$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/engine/GameState.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$Players$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/engine/Players.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$MatchSim$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/engine/MatchSim.js [app-ssr] (ecmascript)");
+"use client";
+;
+;
+;
+;
+;
+const GameContext = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["createContext"])();
+function generateMarkets(fixtures, playerTeamIndex, roundIndex, teams) {
+    // Generate markets for the Top 6 "Banger" Matches based on combined team strength
+    const nonPlayerFixtures = fixtures.filter((f)=>f.home !== playerTeamIndex && f.away !== playerTeamIndex);
+    // Calculate combined strength for each fixture
+    const fixturesWithStrength = nonPlayerFixtures.map((f)=>{
+        const homeStr = teams[f.home].players.slice(0, 11).reduce((s, p)=>s + p.strength, 0) / 11;
+        const awayStr = teams[f.away].players.slice(0, 11).reduce((s, p)=>s + p.strength, 0) / 11;
+        return {
+            fixture: f,
+            homeStr,
+            awayStr,
+            combinedStr: homeStr + awayStr
+        };
+    });
+    // Sort by highest combined strength to find the "bangers"
+    fixturesWithStrength.sort((a, b)=>b.combinedStr - a.combinedStr);
+    // Pick the top 6
+    const bangerFixtures = fixturesWithStrength.slice(0, 6);
+    return bangerFixtures.map(({ fixture: f, homeStr, awayStr })=>{
+        const total = homeStr + awayStr;
+        const homeProb = homeStr / total;
+        const awayProb = awayStr / total;
+        const drawProb = 0.25;
+        return {
+            id: `${roundIndex}-${f.home}-${f.away}`,
+            homeIdx: f.home,
+            awayIdx: f.away,
+            round: roundIndex,
+            resolved: false,
+            odds1: Math.max(1.1, 1 / (homeProb * 0.85 + 0.05) + (Math.random() * 0.3 - 0.15)).toFixed(2),
+            oddsX: Math.max(2.5, 1 / drawProb + (Math.random() * 0.5 - 0.25)).toFixed(2),
+            odds2: Math.max(1.1, 1 / (awayProb * 0.85 + 0.05) + (Math.random() * 0.3 - 0.15)).toFixed(2)
+        };
+    });
+}
+function gameReducer(state, action) {
+    switch(action.type){
+        case 'INIT_GAME':
+            {
+                const teams = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$Players$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["generateTeams"])();
+                const fixtures = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$MatchSim$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["generateFixtures"])(teams);
+                return {
+                    ...state,
+                    teams,
+                    fixtures
+                };
+            }
+        // ─── ONBOARDING ───
+        case 'SET_CONTINENT':
+            return {
+                ...state,
+                selectedContinent: action.payload,
+                onboardingStep: 1
+            };
+        case 'SET_USERNAME':
+            return {
+                ...state,
+                username: action.payload
+            };
+        case 'SET_ONBOARDING_STEP':
+            return {
+                ...state,
+                onboardingStep: action.payload
+            };
+        case 'SELECT_TEAM':
+            return {
+                ...state,
+                playerTeamIndex: action.payload
+            };
+        case 'START_GAME':
+            {
+                const currentRoundFixtures = state.fixtures[0];
+                return {
+                    ...state,
+                    gameStarted: true,
+                    markets: generateMarkets(currentRoundFixtures, state.playerTeamIndex, 0, state.teams)
+                };
+            }
+        // ─── SQUAD ───
+        case 'TOGGLE_LINEUP':
+            {
+                const playerId = action.payload;
+                const currentLineup = [
+                    ...state.selectedLineup
+                ];
+                const index = currentLineup.indexOf(playerId);
+                if (index > -1) {
+                    currentLineup.splice(index, 1);
+                } else if (currentLineup.length < 11) {
+                    currentLineup.push(playerId);
+                }
+                return {
+                    ...state,
+                    selectedLineup: currentLineup
+                };
+            }
+        case 'AUTO_LINEUP':
+            {
+                const team = state.teams[state.playerTeamIndex];
+                const sorted = [
+                    ...team.players
+                ].sort((a, b)=>b.strength - a.strength);
+                const needed = {
+                    GK: 1,
+                    DEF: 4,
+                    MID: 4,
+                    FWD: 2
+                };
+                const newLineup = [];
+                Object.entries(needed).forEach(([pos, count])=>{
+                    const posPlayers = sorted.filter((p)=>p.position === pos);
+                    for(let i = 0; i < count && i < posPlayers.length; i++){
+                        newLineup.push(posPlayers[i].id);
+                    }
+                });
+                return {
+                    ...state,
+                    selectedLineup: newLineup
+                };
+            }
+        // ─── BET SLIP ───
+        case 'ADD_TO_SLIP':
+            {
+                const exists = state.betSlip.find((b)=>b.matchId === action.payload.matchId);
+                if (exists) {
+                    return {
+                        ...state,
+                        betSlip: state.betSlip.map((b)=>b.matchId === action.payload.matchId ? action.payload : b)
+                    };
+                }
+                return {
+                    ...state,
+                    betSlip: [
+                        ...state.betSlip,
+                        {
+                            ...action.payload,
+                            amount: 1000
+                        }
+                    ]
+                };
+            }
+        case 'REMOVE_FROM_SLIP':
+            return {
+                ...state,
+                betSlip: state.betSlip.filter((b)=>b.matchId !== action.payload)
+            };
+        case 'UPDATE_SLIP_AMOUNT':
+            return {
+                ...state,
+                betSlip: state.betSlip.map((b)=>b.matchId === action.payload.matchId ? {
+                        ...b,
+                        amount: action.payload.amount
+                    } : b)
+            };
+        case 'CLEAR_SLIP':
+            return {
+                ...state,
+                betSlip: []
+            };
+        case 'CONFIRM_SLIP':
+            {
+                const totalCost = state.betSlip.reduce((sum, b)=>sum + b.amount, 0);
+                if (totalCost > state.budget || state.betSlip.length === 0) return state;
+                const newBets = state.betSlip.map((b)=>({
+                        marketId: b.matchId,
+                        selection: b.selection,
+                        amount: b.amount,
+                        odds: b.odds,
+                        round: state.round - 1,
+                        resolved: false
+                    }));
+                return {
+                    ...state,
+                    budget: state.budget - totalCost,
+                    activeBets: [
+                        ...state.activeBets,
+                        ...newBets
+                    ],
+                    betSlip: [],
+                    toasts: [
+                        ...state.toasts,
+                        {
+                            id: Date.now(),
+                            message: `Bets placed! €${totalCost.toLocaleString()} wagered on ${newBets.length} match(es).`,
+                            type: 'success'
+                        }
+                    ]
+                };
+            }
+        // ─── MATCHDAY LIVE SIMULATION ───
+        case 'START_LIVE_SIM':
+            {
+                if (state.selectedLineup.length < 11) return state;
+                const currentRoundIdx = state.round - 1;
+                const roundFixtures = state.fixtures[currentRoundIdx];
+                const newTeams = JSON.parse(JSON.stringify(state.teams));
+                // Pre-calculate the entire round
+                const { allResults, playerMatchResult, globalTimeline, matchIncome } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$MatchSim$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["generateRoundTimeline"])(roundFixtures, newTeams, state.playerTeamIndex, state.selectedLineup);
+                // Init scores object (everyone starts at 0-0)
+                const initialScores = {};
+                roundFixtures.forEach((f)=>{
+                    initialScores[`${f.home}-${f.away}`] = {
+                        home: 0,
+                        away: 0
+                    };
+                });
+                return {
+                    ...state,
+                    liveSim: {
+                        active: true,
+                        minute: 0,
+                        scores: initialScores,
+                        playerMatchEvents: [],
+                        timeline: globalTimeline,
+                        allResults,
+                        playerMatchResult,
+                        matchIncome,
+                        halfTimePause: false
+                    }
+                };
+            }
+        case 'TICK_SIM':
+            {
+                if (!state.liveSim.active) return state;
+                const sim = {
+                    ...state.liveSim
+                };
+                if (sim.halfTimePause) {
+                    // We handle the unpause via another action or just rely on the component dispatching TICK without pause
+                    sim.halfTimePause = false;
+                    return {
+                        ...state,
+                        liveSim: sim
+                    };
+                }
+                sim.minute += 1;
+                if (sim.minute === 45) {
+                    sim.halfTimePause = true;
+                }
+                // Process events for this minute
+                const eventsThisMinute = sim.timeline.filter((e)=>e.minute === sim.minute);
+                eventsThisMinute.forEach((event)=>{
+                    if (event.type === 'goal') {
+                        if (event.side === 'home') sim.scores[event.matchId].home += 1;
+                        if (event.side === 'away') sim.scores[event.matchId].away += 1;
+                    }
+                    // Add to player's live commentary if it's their match
+                    if (sim.playerMatchResult && event.matchId === `${sim.playerMatchResult.fixture.home}-${sim.playerMatchResult.fixture.away}`) {
+                        sim.playerMatchEvents = [
+                            {
+                                ...event,
+                                key: Date.now() + Math.random()
+                            },
+                            ...sim.playerMatchEvents
+                        ];
+                    }
+                });
+                return {
+                    ...state,
+                    liveSim: sim
+                };
+            }
+        case 'SKIP_SIM':
+            {
+                if (!state.liveSim.active) return state;
+                // Instantly process all remaining events
+                const sim = {
+                    ...state.liveSim
+                };
+                const remainingEvents = sim.timeline.filter((e)=>e.minute > sim.minute);
+                remainingEvents.forEach((event)=>{
+                    if (event.type === 'goal') {
+                        if (event.side === 'home') sim.scores[event.matchId].home += 1;
+                        if (event.side === 'away') sim.scores[event.matchId].away += 1;
+                    }
+                    if (sim.playerMatchResult && event.matchId === `${sim.playerMatchResult.fixture.home}-${sim.playerMatchResult.fixture.away}`) {
+                        sim.playerMatchEvents = [
+                            {
+                                ...event,
+                                key: Date.now() + Math.random()
+                            },
+                            ...sim.playerMatchEvents
+                        ];
+                    }
+                });
+                sim.minute = 90;
+                return {
+                    ...state,
+                    liveSim: sim
+                };
+            }
+        case 'END_SIM':
+            {
+                if (!state.liveSim.active) return state;
+                const currentRoundIdx = state.round - 1;
+                const newTeams = JSON.parse(JSON.stringify(state.teams));
+                const { allResults, playerMatchResult, matchIncome } = state.liveSim;
+                const roundFixtures = state.fixtures[currentRoundIdx];
+                // 1. Apply results to teams
+                allResults.forEach(({ homeTeam, awayTeam, result, fixture })=>{
+                    const h = newTeams.find((t)=>t.id === homeTeam.id);
+                    const a = newTeams.find((t)=>t.id === awayTeam.id);
+                    h.stats.played++;
+                    a.stats.played++;
+                    h.stats.goalsFor += result.homeGoals;
+                    h.stats.goalsAgainst += result.awayGoals;
+                    a.stats.goalsFor += result.awayGoals;
+                    a.stats.goalsAgainst += result.homeGoals;
+                    if (result.homeGoals > result.awayGoals) {
+                        h.stats.won++;
+                        h.stats.points += 3;
+                        a.stats.lost++;
+                    } else if (result.homeGoals < result.awayGoals) {
+                        a.stats.won++;
+                        a.stats.points += 3;
+                        h.stats.lost++;
+                    } else {
+                        h.stats.drawn++;
+                        a.stats.drawn++;
+                        h.stats.points++;
+                        a.stats.points++;
+                    }
+                    // Update fixture
+                    const fix = roundFixtures.find((f)=>f.home === fixture.home && f.away === fixture.away);
+                    fix.homeGoals = result.homeGoals;
+                    fix.awayGoals = result.awayGoals;
+                    fix.played = true;
+                });
+                // 2. Resolve bets
+                let roundWinnings = 0;
+                let newOracleStreak = state.oracleStreak;
+                const newToasts = [];
+                const newActiveBets = state.activeBets.map((bet)=>{
+                    if (bet.round === currentRoundIdx && !bet.resolved) {
+                        const market = state.markets.find((m)=>m.id === bet.marketId);
+                        if (market) {
+                            const fix = roundFixtures.find((f)=>f.home === market.homeIdx && f.away === market.awayIdx);
+                            if (fix) {
+                                let won;
+                                if (bet.selection) {
+                                    const actualResult = fix.homeGoals > fix.awayGoals ? '1' : fix.homeGoals < fix.awayGoals ? '2' : 'X';
+                                    won = bet.selection === actualResult;
+                                } else {
+                                    const homeWin = fix.homeGoals > fix.awayGoals;
+                                    won = bet.isYes === homeWin;
+                                }
+                                if (won) {
+                                    const payout = bet.amount * parseFloat(bet.odds || bet.multiplier);
+                                    roundWinnings += payout;
+                                    newOracleStreak++;
+                                    newToasts.push({
+                                        id: Date.now() + Math.floor(Math.random() * 1000),
+                                        message: `🎯 Won €${Math.floor(payout).toLocaleString()}!`,
+                                        type: 'success'
+                                    });
+                                } else {
+                                    newOracleStreak = 0;
+                                    newToasts.push({
+                                        id: Date.now() + Math.floor(Math.random() * 1000),
+                                        message: `❌ Lost €${bet.amount.toLocaleString()}`,
+                                        type: 'error'
+                                    });
+                                }
+                                return {
+                                    ...bet,
+                                    resolved: true,
+                                    won
+                                };
+                            }
+                        }
+                    }
+                    return bet;
+                });
+                const newBudget = state.budget + matchIncome + roundWinnings;
+                // 3. NFT Triggers
+                let newWinStreak = state.winStreak;
+                const newPendingMints = [
+                    ...state.pendingMints
+                ];
+                if (playerMatchResult) {
+                    const isWin = playerMatchResult.homeIsPlayer ? playerMatchResult.result.homeGoals > playerMatchResult.result.awayGoals : playerMatchResult.result.awayGoals > playerMatchResult.result.homeGoals;
+                    if (isWin) {
+                        newWinStreak++;
+                        if (!state.nftBadges.some((b)=>b.type === 0)) {
+                            newPendingMints.push({
+                                type: 0,
+                                info: `First Win vs ${playerMatchResult.homeIsPlayer ? playerMatchResult.awayTeam.name : playerMatchResult.homeTeam.name}`
+                            });
+                        }
+                        if (newWinStreak === 5 && !state.nftBadges.some((b)=>b.type === 1)) {
+                            newPendingMints.push({
+                                type: 1,
+                                info: "5 Match Win Streak"
+                            });
+                        }
+                        if (newWinStreak === 10 && !state.nftBadges.some((b)=>b.type === 4)) {
+                            newPendingMints.push({
+                                type: 4,
+                                info: "10 Matches Unbeaten"
+                            });
+                        }
+                    } else {
+                        const isDraw = playerMatchResult.result.homeGoals === playerMatchResult.result.awayGoals;
+                        if (!isDraw) newWinStreak = 0;
+                    }
+                }
+                if (newOracleStreak >= 3 && !state.nftBadges.some((b)=>b.type === 2)) {
+                    newPendingMints.push({
+                        type: 2,
+                        info: "3 Correct Predictions"
+                    });
+                    newOracleStreak = 0;
+                }
+                const sortedTeams = [
+                    ...newTeams
+                ].sort((a, b)=>b.stats.points - a.stats.points);
+                if (sortedTeams[0].id === state.playerTeamIndex && state.round >= 5 && !state.nftBadges.some((b)=>b.type === 5)) {
+                    newPendingMints.push({
+                        type: 5,
+                        info: "Reached #1 in the League"
+                    });
+                }
+                if (state.round >= 20 && !state.nftBadges.some((b)=>b.type === 6)) {
+                    newPendingMints.push({
+                        type: 6,
+                        info: "Completed 20 Matchdays"
+                    });
+                }
+                // 4. Player energy
+                const playerTeam = newTeams[state.playerTeamIndex];
+                playerTeam.players.forEach((p)=>{
+                    if (state.selectedLineup.includes(p.id)) {
+                        p.energy = Math.max(20, p.energy - (10 + Math.floor(Math.random() * 10)));
+                    } else {
+                        p.energy = Math.min(100, p.energy + 25);
+                    }
+                });
+                return {
+                    ...state,
+                    teams: newTeams,
+                    budget: newBudget,
+                    activeBets: newActiveBets,
+                    winStreak: newWinStreak,
+                    oracleStreak: newOracleStreak,
+                    pendingMints: newPendingMints,
+                    showMatchModal: true,
+                    liveSim: {
+                        ...state.liveSim,
+                        active: false
+                    },
+                    lastMatchResult: {
+                        playerMatch: playerMatchResult,
+                        allResults
+                    },
+                    toasts: [
+                        ...state.toasts,
+                        ...newToasts
+                    ]
+                };
+            }
+        case 'CLOSE_MATCH_MODAL':
+            {
+                const nextRound = state.round + 1;
+                const isSeasonOver = nextRound > state.fixtures.length;
+                let newMarkets = [];
+                if (!isSeasonOver) {
+                    newMarkets = generateMarkets(state.fixtures[nextRound - 1], state.playerTeamIndex, nextRound - 1, state.teams);
+                }
+                return {
+                    ...state,
+                    showMatchModal: false,
+                    round: nextRound,
+                    markets: isSeasonOver ? [] : newMarkets,
+                    showSeasonEnd: isSeasonOver
+                };
+            }
+        case 'DISMISS_MINT':
+            return {
+                ...state,
+                budget: state.budget + 500000,
+                pendingMints: state.pendingMints.filter((_, i)=>i !== 0),
+                nftBadges: [
+                    ...state.nftBadges,
+                    action.payload
+                ],
+                toasts: [
+                    ...state.toasts,
+                    {
+                        id: Date.now(),
+                        message: 'Badge Collected! €500,000 demo funds added.',
+                        type: 'success'
+                    }
+                ]
+            };
+        case 'PK_GAME_END':
+            {
+                const { won, score } = action.payload;
+                const stats = {
+                    ...state.pkShooterStats
+                };
+                stats.totalPlayed++;
+                stats.totalGoals += score;
+                if (score > stats.bestScore) stats.bestScore = score;
+                const newPendingMints = [
+                    ...state.pendingMints
+                ];
+                if (won) {
+                    stats.totalWins++;
+                    stats.winStreak++;
+                    if (stats.totalWins === 1 && !state.nftBadges.some((b)=>b.type === 8)) {
+                        newPendingMints.push({
+                            type: 8,
+                            info: "First PK Shootout Win"
+                        });
+                    } else if (stats.totalWins === 5 && !state.nftBadges.some((b)=>b.type === 9)) {
+                        newPendingMints.push({
+                            type: 9,
+                            info: "5 PK Shootout Wins"
+                        });
+                    } else if (stats.totalWins === 10 && !state.nftBadges.some((b)=>b.type === 10)) {
+                        newPendingMints.push({
+                            type: 10,
+                            info: "10 PK Shootout Wins"
+                        });
+                    }
+                } else {
+                    stats.winStreak = 0;
+                }
+                return {
+                    ...state,
+                    pkShooterStats: stats,
+                    pendingMints: newPendingMints,
+                    toasts: [
+                        ...state.toasts,
+                        {
+                            id: Date.now(),
+                            message: won ? `Shootout Won! (${score}/5)` : `Shootout Lost. (${score}/5)`,
+                            type: won ? 'success' : 'error'
+                        }
+                    ]
+                };
+            }
+        // ─── TOASTS ───
+        case 'DISMISS_TOAST':
+            return {
+                ...state,
+                toasts: state.toasts.filter((t)=>t.id !== action.payload)
+            };
+        case 'ADD_TOAST':
+            return {
+                ...state,
+                toasts: [
+                    ...state.toasts,
+                    {
+                        id: Date.now(),
+                        ...action.payload
+                    }
+                ]
+            };
+        default:
+            return state;
+    }
+}
+function GameProvider({ children }) {
+    const [state, dispatch] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useReducer"])(gameReducer, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$GameState$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["initialGameState"]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        dispatch({
+            type: 'INIT_GAME'
+        });
+    }, []);
+    // The Tick Loop for Live Simulation
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        if (!state.liveSim.active) return;
+        // If we reached minute 90, end the sim after a short pause
+        if (state.liveSim.minute >= 90) {
+            const timer = setTimeout(()=>{
+                dispatch({
+                    type: 'END_SIM'
+                });
+            }, 1500);
+            return ()=>clearTimeout(timer);
+        }
+        // If half time, pause for 3 seconds
+        if (state.liveSim.halfTimePause) {
+            const timer = setTimeout(()=>{
+                dispatch({
+                    type: 'TICK_SIM'
+                }); // This tick will unpause
+            }, 3000);
+            return ()=>clearTimeout(timer);
+        }
+        // Tick every 666ms (90 minutes in ~60 seconds)
+        const timer = setTimeout(()=>{
+            dispatch({
+                type: 'TICK_SIM'
+            });
+        }, 666);
+        return ()=>clearTimeout(timer);
+    }, [
+        state.liveSim.active,
+        state.liveSim.minute,
+        state.liveSim.halfTimePause
+    ]);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(GameContext.Provider, {
+        value: {
+            state,
+            dispatch
+        },
+        children: children
+    }, void 0, false, {
+        fileName: "[project]/src/context/GameContext.jsx",
+        lineNumber: 459,
+        columnNumber: 9
+    }, this);
+}
+function useGame() {
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useContext"])(GameContext);
+}
+}),
+"[externals]/buffer [external] (buffer, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("buffer", () => require("buffer"));
+
+module.exports = mod;
+}),
+"[externals]/util [external] (util, cjs)", ((__turbopack_context__, module, exports) => {
+
+const mod = __turbopack_context__.x("util", () => require("util"));
+
+module.exports = mod;
+}),
+"[project]/src/web3/config.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "ABIS",
+    ()=>ABIS,
+    "CONFIG",
+    ()=>CONFIG
+]);
+const CONFIG = {
+    XLAYER_TESTNET_ID: 195,
+    XLAYER_RPC: 'https://testrpc.xlayer.tech',
+    PREDICTION_MARKET_ADDRESS: '0x3a1161a0244BdAb218a0e463Bfbe2E1d1F7Ee522',
+    WORLD_CUP_NFT_ADDRESS: '0x87493aBD5A738c32c4A1b63Af4E470eA2D704Bc6',
+    USDT_ADDRESS: '0x14712173612c33c8bafd0E7A8916ebd84EE8A6B8'
+};
+const ABIS = {
+    ERC20: [
+        "function approve(address spender, uint256 amount) external returns (bool)",
+        "function allowance(address owner, address spender) external view returns (uint256)",
+        "function balanceOf(address account) external view returns (uint256)",
+        "function decimals() external view returns (uint8)"
+    ],
+    PredictionMarket: [
+        "function createMarket(string _question, uint256 _resolutionTime, uint256 _feeAmount) external returns (uint256)",
+        "function placeBet(uint256 _marketId, uint8 _outcome, uint256 _amount) external",
+        "function resolveMarket(uint256 _marketId, uint8 _winningOutcome) external",
+        "function claimWinnings(uint256 _marketId) external",
+        "function markets(uint256) external view returns (uint256 id, string question, uint256 resolutionTime, uint8 state, uint8 winningOutcome, uint256 yesPool, uint256 noPool, uint256 creationFee, address creator, uint256 createdAt)",
+        "function calculatePayout(uint256 _marketId, address _user) external view returns (uint256)"
+    ],
+    WorldCupNFT: [
+        "function mintBadge(address to, string tokenURI, uint8 badgeType, string matchInfo) external returns (uint256)",
+        "function getUserBadges(address user) external view returns (uint256[])",
+        "function tokenURI(uint256 tokenId) external view returns (string)",
+        "event BadgeMinted(address indexed to, uint256 tokenId, uint8 badgeType, string matchInfo)"
+    ]
+};
+}),
+"[project]/src/web3/useWeb3.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Web3Provider",
+    ()=>Web3Provider,
+    "useWeb3",
+    ()=>useWeb3
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$ethers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__ethers$3e$__ = __turbopack_context__.i("[project]/node_modules/ethers/lib.esm/ethers.js [app-ssr] (ecmascript) <export * as ethers>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$config$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/web3/config.js [app-ssr] (ecmascript)");
+"use client";
+;
+;
+;
+;
+const Web3Context = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["createContext"])();
+function Web3Provider({ children }) {
+    const [wallet, setWallet] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
+        connected: false,
+        address: null,
+        chainId: null,
+        balance: '0'
+    });
+    const connectWallet = async ()=>{
+        try {
+            if (!window.ethereum) throw new Error("MetaMask is not installed");
+            const provider = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$ethers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__ethers$3e$__["ethers"].providers.Web3Provider(window.ethereum, "any");
+            const accounts = await provider.send("eth_requestAccounts", []);
+            let network = await provider.getNetwork();
+            if (network.chainId !== __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$config$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONFIG"].XLAYER_TESTNET_ID) {
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [
+                            {
+                                chainId: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$ethers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__ethers$3e$__["ethers"].utils.hexValue(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$config$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONFIG"].XLAYER_TESTNET_ID)
+                            }
+                        ]
+                    });
+                } catch (switchError) {
+                    throw new Error("Please switch to X Layer Testnet in your wallet.", {
+                        cause: switchError
+                    });
+                }
+                // Wait for the provider to sync with the new network
+                await new Promise((resolve)=>setTimeout(resolve, 1000));
+                network = await provider.getNetwork();
+            }
+            const balance = await provider.getBalance(accounts[0]);
+            setWallet({
+                connected: true,
+                address: accounts[0],
+                chainId: network.chainId,
+                balance: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$ethers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__ethers$3e$__["ethers"].utils.formatEther(balance)
+            });
+            return {
+                success: true
+            };
+        } catch (error) {
+            console.error("Connection failed", error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    };
+    const mintNFT = async (userAddress, badgeType, matchInfo)=>{
+        try {
+            const pk = ("TURBOPACK compile-time value", "74c676ce02b2b57d32d385f5efd63f99d79d006ef9e0e5e98721b5bdf12421c3");
+            const provider = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$ethers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__ethers$3e$__["ethers"].providers.JsonRpcProvider(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$config$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONFIG"].XLAYER_RPC);
+            const signer = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$ethers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__ethers$3e$__["ethers"].Wallet(pk, provider);
+            const contract = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$ethers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__ethers$3e$__["ethers"].Contract(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$config$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONFIG"].WORLD_CUP_NFT_ADDRESS, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$config$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ABIS"].WorldCupNFT, signer);
+            const tokenURI = "ipfs://QmMockMetadataURI";
+            const tx = await contract.mintBadge(userAddress, tokenURI, badgeType, matchInfo, {
+                gasLimit: 300000
+            });
+            await tx.wait();
+            return {
+                success: true
+            };
+        } catch (error) {
+            console.error("Mint failed", error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    };
+    const placeBetOnChain = async (marketId, isYes)=>{
+        try {
+            if (!window.ethereum) throw new Error("Wallet not connected");
+            const provider = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$ethers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__ethers$3e$__["ethers"].providers.Web3Provider(window.ethereum, "any");
+            const signer = provider.getSigner();
+            const usdt = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$ethers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__ethers$3e$__["ethers"].Contract(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$config$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONFIG"].USDT_ADDRESS, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$config$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ABIS"].ERC20, signer);
+            const market = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$ethers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__ethers$3e$__["ethers"].Contract(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$config$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONFIG"].PREDICTION_MARKET_ADDRESS, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$config$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ABIS"].PredictionMarket, signer);
+            const amountWei = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$ethers$2f$lib$2e$esm$2f$ethers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__ethers$3e$__["ethers"].utils.parseUnits("10", 18);
+            const approveTx = await usdt.approve(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$config$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONFIG"].PREDICTION_MARKET_ADDRESS, amountWei);
+            await approveTx.wait();
+            const outcome = isYes ? 1 : 2;
+            const betTx = await market.placeBet(marketId, outcome, amountWei);
+            await betTx.wait();
+            return {
+                success: true
+            };
+        } catch (error) {
+            console.error("Bet failed", error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Web3Context.Provider, {
+        value: {
+            wallet,
+            connectWallet,
+            mintNFT,
+            placeBetOnChain
+        },
+        children: children
+    }, void 0, false, {
+        fileName: "[project]/src/web3/useWeb3.jsx",
+        lineNumber: 103,
+        columnNumber: 9
+    }, this);
+}
+function useWeb3() {
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useContext"])(Web3Context);
+}
+}),
+"[project]/src/components/Flag.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>Flag
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+;
+function Flag({ code, size = 'w-8 h-8', className = '' }) {
+    if (!code) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+        className: `${size} flex items-center justify-center bg-white/5 rounded-full text-xl ${className}`,
+        children: "🌍"
+    }, void 0, false, {
+        fileName: "[project]/src/components/Flag.jsx",
+        lineNumber: 3,
+        columnNumber: 23
+    }, this);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+        src: `https://flagcdn.com/w40/${code}.png`,
+        srcSet: `https://flagcdn.com/w80/${code}.png 2x`,
+        alt: `${code} flag`,
+        className: `inline-block object-cover rounded-full shadow-md ${size} ${className}`
+    }, void 0, false, {
+        fileName: "[project]/src/components/Flag.jsx",
+        lineNumber: 6,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/layouts/ManagerLayout.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>ManagerLayout
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$useWeb3$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/web3/useWeb3.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Flag.jsx [app-ssr] (ecmascript)");
+;
+;
+;
+;
+const NAV_ITEMS = [
+    {
+        id: 'dashboard',
+        label: 'DASHBOARD',
+        icon: '📊'
+    },
+    {
+        id: 'squad',
+        label: 'MY SQUAD',
+        icon: '👕'
+    },
+    {
+        id: 'matchday',
+        label: 'MATCHDAY',
+        icon: '⚽'
+    },
+    {
+        id: 'collection',
+        label: 'COLLECTION',
+        icon: '🏆'
+    },
+    {
+        id: 'pk-shooter',
+        label: 'PK SHOOTER',
+        icon: '🎯'
+    }
+];
+function ManagerLayout({ children, activeTab, setActiveTab }) {
+    const { state } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    const { wallet, connectWallet } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$useWeb3$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useWeb3"])();
+    const team = state.teams[state.playerTeamIndex];
+    if (!team) return null;
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "flex h-screen bg-spaceBlack text-white overflow-hidden relative font-body",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "absolute inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none"
+            }, void 0, false, {
+                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                lineNumber: 23,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "absolute top-0 inset-x-0 h-96 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neonGreen/15 via-spaceBlack/50 to-transparent pointer-events-none"
+            }, void 0, false, {
+                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                lineNumber: 25,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
+                className: "w-64 border-r border-white/10 bg-stadiumBlue/80 backdrop-blur-2xl flex flex-col relative z-10 shadow-[4px_0_24px_rgba(0,0,0,0.5)]",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "p-6 border-b border-white/10 flex items-center gap-3",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "w-10 h-10 bg-neonGold rounded-xl flex items-center justify-center font-black text-black text-xl shadow-[0_0_15px_rgba(255,215,0,0.5)]",
+                                children: "X"
+                            }, void 0, false, {
+                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                lineNumber: 31,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "font-heading font-black tracking-widest text-sm text-neonGold",
+                                        children: "X-CUP"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                        lineNumber: 33,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-[10px] text-gray-500 font-bold uppercase tracking-widest",
+                                        children: "Manager"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                        lineNumber: 34,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                lineNumber: 32,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                        lineNumber: 30,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "p-6 border-b border-white/5 flex flex-col items-center",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                code: team.code,
+                                size: "w-16 h-16",
+                                className: "mb-3"
+                            }, void 0, false, {
+                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                lineNumber: 40,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "font-bold text-lg",
+                                children: team.name
+                            }, void 0, false, {
+                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                lineNumber: 41,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "text-xs text-gray-400",
+                                children: [
+                                    "Rank: #",
+                                    [
+                                        ...state.teams
+                                    ].sort((a, b)=>b.stats.points - a.stats.points).findIndex((t)=>t.id === team.id) + 1
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                lineNumber: 42,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                        lineNumber: 39,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
+                        className: "flex-1 py-6 px-4 space-y-2",
+                        children: NAV_ITEMS.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>setActiveTab(item.id),
+                                className: `w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === item.id ? 'bg-white/10 text-white shadow-inner border border-white/5' : 'text-gray-500 hover:text-white hover:bg-white/5'}`,
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: activeTab === item.id ? 'text-neonGold' : 'grayscale opacity-70',
+                                        children: item.icon
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                        lineNumber: 57,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-sm tracking-wider",
+                                        children: item.label
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                        lineNumber: 58,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, item.id, true, {
+                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                lineNumber: 48,
+                                columnNumber: 25
+                            }, this))
+                    }, void 0, false, {
+                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                        lineNumber: 46,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "p-6 border-t border-white/10 space-y-4",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex items-center justify-between text-xs text-gray-400",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    children: [
+                                        "Season ",
+                                        state.season
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                    lineNumber: 66,
+                                    columnNumber: 25
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    children: [
+                                        "Round ",
+                                        state.round
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                    lineNumber: 67,
+                                    columnNumber: 25
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                            lineNumber: 65,
+                            columnNumber: 21
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                        lineNumber: 64,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                lineNumber: 28,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
+                className: "flex-1 flex flex-col relative z-10 overflow-hidden",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                        className: "h-20 border-b border-white/10 bg-black/20 backdrop-blur-md flex items-center justify-between px-8",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-6",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex flex-col",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-[10px] font-bold text-gray-500 uppercase tracking-widest",
+                                                children: "Demo Budget"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                                lineNumber: 79,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "font-black text-neonGreen text-xl",
+                                                children: [
+                                                    "€",
+                                                    (state.budget / 1000000).toFixed(2),
+                                                    "M"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                                lineNumber: 80,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                        lineNumber: 78,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-px h-8 bg-white/10"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                        lineNumber: 82,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex flex-col",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-[10px] font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1",
+                                                children: [
+                                                    "USDT0 Balance ",
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "w-1.5 h-1.5 rounded-full bg-neonBlue animate-pulse"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                                        lineNumber: 86,
+                                                        columnNumber: 47
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                                lineNumber: 85,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "font-black text-white text-xl",
+                                                children: wallet.connected ? parseFloat(wallet.balance).toFixed(2) : '0.00'
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                                lineNumber: 88,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                        lineNumber: 84,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                lineNumber: 76,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: wallet.connected ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex items-center gap-3 bg-neonBlue/10 border border-neonBlue/30 px-4 py-2 rounded-full",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "w-2 h-2 rounded-full bg-neonBlue shadow-[0_0_8px_cyan]"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                            lineNumber: 95,
+                                            columnNumber: 33
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "font-mono text-sm text-neonBlue",
+                                            children: [
+                                                wallet.address.slice(0, 6),
+                                                "...",
+                                                wallet.address.slice(-4)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                            lineNumber: 96,
+                                            columnNumber: 33
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                    lineNumber: 94,
+                                    columnNumber: 29
+                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: connectWallet,
+                                    className: "bg-white text-black font-bold px-6 py-2 rounded-full hover:bg-gray-200 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.3)]",
+                                    children: "CONNECT WALLET"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                    lineNumber: 99,
+                                    columnNumber: 29
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                                lineNumber: 92,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                        lineNumber: 75,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex-1 p-8 overflow-y-auto hide-scrollbar",
+                        children: children
+                    }, void 0, false, {
+                        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                        lineNumber: 110,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/layouts/ManagerLayout.jsx",
+                lineNumber: 73,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/layouts/ManagerLayout.jsx",
+        lineNumber: 21,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/components/LandingPage.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>LandingPage
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$useWeb3$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/web3/useWeb3.jsx [app-ssr] (ecmascript)");
+;
+;
+;
+function LandingPage({ onEnter }) {
+    const { connectWallet } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$useWeb3$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useWeb3"])();
+    const handleConnect = async ()=>{
+        const res = await connectWallet();
+        if (res.success) {
+            onEnter();
+        } else {
+            alert("Connection Failed: " + res.error);
+        }
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-spaceBlack text-white",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "absolute inset-0 z-0",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neonBlue/20 via-spaceBlack/90 to-spaceBlack"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/LandingPage.jsx",
+                        lineNumber: 21,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/LandingPage.jsx",
+                        lineNumber: 23,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/LandingPage.jsx",
+                lineNumber: 20,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                initial: {
+                    y: -50,
+                    opacity: 0
+                },
+                animate: {
+                    y: 0,
+                    opacity: 1
+                },
+                transition: {
+                    delay: 0.5
+                },
+                className: "absolute top-0 left-0 w-full bg-glassWhite border-b border-white/10 backdrop-blur-md py-3 px-6 flex justify-between items-center z-20 text-sm text-gray-400 font-body",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex gap-8",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-neonGreen",
+                                        children: "●"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LandingPage.jsx",
+                                        lineNumber: 34,
+                                        columnNumber: 27
+                                    }, this),
+                                    " LIVE ON X LAYER"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/LandingPage.jsx",
+                                lineNumber: 34,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                children: [
+                                    "TVL: ",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                        className: "text-white",
+                                        children: "$1.2M USDT0"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LandingPage.jsx",
+                                        lineNumber: 35,
+                                        columnNumber: 32
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/LandingPage.jsx",
+                                lineNumber: 35,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                children: [
+                                    "MATCHES: ",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                        className: "text-white",
+                                        children: "15,420"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LandingPage.jsx",
+                                        lineNumber: 36,
+                                        columnNumber: 36
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/LandingPage.jsx",
+                                lineNumber: 36,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/LandingPage.jsx",
+                        lineNumber: 33,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        children: "X Cup Global League v2.0"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/LandingPage.jsx",
+                        lineNumber: 38,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/LandingPage.jsx",
+                lineNumber: 27,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "relative z-10 text-center max-w-4xl mx-auto px-4",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].h1, {
+                        initial: {
+                            scale: 0.9,
+                            opacity: 0
+                        },
+                        animate: {
+                            scale: 1,
+                            opacity: 1
+                        },
+                        transition: {
+                            duration: 1,
+                            ease: "easeOut"
+                        },
+                        className: "text-6xl md:text-8xl font-heading font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500",
+                        children: [
+                            "OWN THE PITCH.",
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
+                                fileName: "[project]/src/components/LandingPage.jsx",
+                                lineNumber: 49,
+                                columnNumber: 35
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "text-neonGold",
+                                style: {
+                                    textShadow: '0 0 20px #FFD700'
+                                },
+                                children: "PREDICT THE FUTURE."
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/LandingPage.jsx",
+                                lineNumber: 50,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/LandingPage.jsx",
+                        lineNumber: 43,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].p, {
+                        initial: {
+                            y: 20,
+                            opacity: 0
+                        },
+                        animate: {
+                            y: 0,
+                            opacity: 1
+                        },
+                        transition: {
+                            delay: 0.5,
+                            duration: 0.8
+                        },
+                        className: "text-xl md:text-2xl text-gray-400 font-body mb-12 max-w-2xl mx-auto",
+                        children: "The world's first AAA Web3 Football Manager. Scout real players, build your ultimate squad, and bet on live fixtures."
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/LandingPage.jsx",
+                        lineNumber: 53,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                        initial: {
+                            y: 20,
+                            opacity: 0
+                        },
+                        animate: {
+                            y: 0,
+                            opacity: 1
+                        },
+                        transition: {
+                            delay: 1
+                        },
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: handleConnect,
+                                className: "group relative px-8 py-4 bg-neonGold text-black font-heading font-bold text-xl rounded-full overflow-hidden transition-transform hover:scale-105",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LandingPage.jsx",
+                                        lineNumber: 71,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "relative flex items-center gap-2",
+                                        children: [
+                                            "CONNECT WALLET TO ENTER",
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                className: "w-5 h-5",
+                                                fill: "none",
+                                                stroke: "currentColor",
+                                                viewBox: "0 0 24 24",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                    strokeLinecap: "round",
+                                                    strokeLinejoin: "round",
+                                                    strokeWidth: "2",
+                                                    d: "M14 5l7 7m0 0l-7 7m7-7H3"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/LandingPage.jsx",
+                                                    lineNumber: 74,
+                                                    columnNumber: 108
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/LandingPage.jsx",
+                                                lineNumber: 74,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/LandingPage.jsx",
+                                        lineNumber: 72,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/LandingPage.jsx",
+                                lineNumber: 67,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: onEnter,
+                                className: "mt-6 block mx-auto px-6 py-2 border border-white/20 text-gray-400 rounded-full hover:text-white hover:border-white transition-colors",
+                                children: "Enter Demo Mode"
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/LandingPage.jsx",
+                                lineNumber: 78,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "mt-4 text-xs text-gray-600",
+                                children: "No crypto required to play demo mode."
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/LandingPage.jsx",
+                                lineNumber: 84,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/LandingPage.jsx",
+                        lineNumber: 62,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/LandingPage.jsx",
+                lineNumber: 42,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/components/LandingPage.jsx",
+        lineNumber: 18,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/pages/Dashboard.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>Dashboard
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Flag.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-ssr] (ecmascript)");
+;
+;
+;
+;
+function Dashboard() {
+    const { state } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    const winRate = state.activeBets.length > 0 ? (state.activeBets.filter((b)=>b.won).length / state.activeBets.filter((b)=>b.resolved).length * 100).toFixed(1) : 0;
+    const totalWon = state.activeBets.filter((b)=>b.won).length;
+    const totalLost = state.activeBets.filter((b)=>b.resolved && !b.won).length;
+    const playerTeam = state.teams[state.playerTeamIndex];
+    const form = [
+        'W',
+        'D',
+        'W',
+        'W',
+        'L'
+    ];
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "space-y-8 animate-in fade-in duration-500 font-body",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                className: "flex justify-between items-end border-b border-white/10 pb-6",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                className: "text-4xl font-heading font-bold text-white uppercase tracking-wider shadow-black drop-shadow-lg",
+                                children: "MANAGER OVERVIEW"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                lineNumber: 22,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-neonGreen font-bold uppercase tracking-widest text-xs mt-1",
+                                children: "Live Broadcast Data Center"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                lineNumber: 23,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Dashboard.jsx",
+                        lineNumber: 21,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex gap-1 bg-black/50 p-2 rounded-xl border border-white/5 shadow-inner",
+                        children: form.map((res, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: `w-8 h-8 rounded-lg flex items-center justify-center font-heading font-bold text-lg ${res === 'W' ? 'bg-neonGreen text-black shadow-[0_0_10px_rgba(16,185,129,0.4)]' : res === 'D' ? 'bg-gray-600 text-white' : 'bg-neonRed text-white shadow-[0_0_10px_rgba(239,68,68,0.4)]'}`,
+                                children: res
+                            }, i, false, {
+                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                lineNumber: 27,
+                                columnNumber: 25
+                            }, this))
+                    }, void 0, false, {
+                        fileName: "[project]/src/pages/Dashboard.jsx",
+                        lineNumber: 25,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/pages/Dashboard.jsx",
+                lineNumber: 20,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "grid grid-cols-1 xl:grid-cols-3 gap-8",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "col-span-1 xl:col-span-2 space-y-8",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "grid grid-cols-1 lg:grid-cols-3 gap-6",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-stadiumBlue/60 border border-white/10 rounded-2xl p-6 backdrop-blur-xl relative overflow-hidden shadow-2xl group",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "absolute top-0 right-0 p-4 opacity-5 text-6xl group-hover:scale-110 transition-transform",
+                                                children: "📈"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 42,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                className: "font-bold text-gray-400 mb-6 uppercase tracking-widest text-xs flex items-center gap-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "w-2 h-2 rounded-full bg-neonGold"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 43,
+                                                        columnNumber: 132
+                                                    }, this),
+                                                    "Prediction Analytics"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 43,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-6xl font-heading font-bold text-neonGold mb-1 tracking-wider drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]",
+                                                children: [
+                                                    winRate,
+                                                    "%"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 44,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-sm text-gray-400 mb-4 font-bold uppercase tracking-wider",
+                                                children: "Oracle Accuracy Rate"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 45,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex w-full h-3 bg-black/80 rounded-full overflow-hidden border border-white/5",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "bg-neonGreen transition-all shadow-[0_0_10px_rgba(16,185,129,0.8)]",
+                                                        style: {
+                                                            width: `${totalWon / (totalWon + totalLost) * 100 || 0}%`
+                                                        }
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 48,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "bg-neonRed transition-all shadow-[0_0_10px_rgba(239,68,68,0.8)]",
+                                                        style: {
+                                                            width: `${totalLost / (totalWon + totalLost) * 100 || 0}%`
+                                                        }
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 49,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 47,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex justify-between mt-3 text-xs font-bold tracking-widest",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-neonGreen",
+                                                        children: [
+                                                            totalWon,
+                                                            " WINS"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 52,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-neonRed",
+                                                        children: [
+                                                            totalLost,
+                                                            " LOSSES"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 53,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 51,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                        lineNumber: 41,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-gradient-to-br from-stadiumBlue/90 to-black border border-white/10 rounded-2xl p-6 backdrop-blur-xl relative overflow-hidden shadow-2xl flex items-center",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.03)_50%,transparent_75%)] bg-[size:250px_250px] animate-[shimmer_3s_infinite_linear]"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 59,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "relative z-10 flex w-full items-center gap-6",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "relative",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "absolute inset-0 bg-neonBlue blur-2xl opacity-20"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                lineNumber: 62,
+                                                                columnNumber: 37
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                                code: playerTeam.code,
+                                                                size: "w-24 h-24",
+                                                                className: "shadow-2xl border-2 border-white/10 rounded-lg relative z-10"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                lineNumber: 63,
+                                                                columnNumber: 37
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 61,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                                className: "font-bold text-neonBlue mb-1 uppercase tracking-widest text-xs",
+                                                                children: "Your Franchise"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                lineNumber: 66,
+                                                                columnNumber: 37
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "text-3xl font-heading font-bold text-white uppercase tracking-wider drop-shadow-md",
+                                                                children: playerTeam.name
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                lineNumber: 67,
+                                                                columnNumber: 37
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "flex gap-4 mt-3",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                className: "text-[10px] text-gray-500 font-bold uppercase",
+                                                                                children: "Points"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                                lineNumber: 70,
+                                                                                columnNumber: 45
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                className: "font-heading text-xl text-white",
+                                                                                children: playerTeam.stats.points
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                                lineNumber: 71,
+                                                                                columnNumber: 45
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                        lineNumber: 69,
+                                                                        columnNumber: 41
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                className: "text-[10px] text-gray-500 font-bold uppercase",
+                                                                                children: "Goals"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                                lineNumber: 74,
+                                                                                columnNumber: 45
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                className: "font-heading text-xl text-white",
+                                                                                children: playerTeam.stats.gf
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                                lineNumber: 75,
+                                                                                columnNumber: 45
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                        lineNumber: 73,
+                                                                        columnNumber: 41
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                lineNumber: 68,
+                                                                columnNumber: 37
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 65,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 60,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                        lineNumber: 58,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-stadiumBlue/60 border border-white/10 rounded-2xl p-6 backdrop-blur-xl relative overflow-hidden shadow-2xl group",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "absolute top-0 right-0 p-4 opacity-5 text-6xl group-hover:scale-110 transition-transform",
+                                                children: "🎯"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 84,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                                className: "font-bold text-gray-400 mb-6 uppercase tracking-widest text-xs flex items-center gap-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "w-2 h-2 rounded-full bg-neonGreen"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 85,
+                                                        columnNumber: 132
+                                                    }, this),
+                                                    "PK Shootout Stats"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 85,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex gap-4",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "text-sm text-gray-400 font-bold uppercase tracking-wider mb-1",
+                                                                children: "Win Rate"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                lineNumber: 88,
+                                                                columnNumber: 37
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "text-3xl font-heading font-bold text-white mb-4",
+                                                                children: [
+                                                                    state.pkShooterStats.totalPlayed ? Math.round(state.pkShooterStats.totalWins / state.pkShooterStats.totalPlayed * 100) : 0,
+                                                                    "%"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                lineNumber: 89,
+                                                                columnNumber: 37
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 87,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex-1",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "text-sm text-gray-400 font-bold uppercase tracking-wider mb-1",
+                                                                children: "Best Score"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                lineNumber: 94,
+                                                                columnNumber: 37
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "text-3xl font-heading font-bold text-neonGold mb-4",
+                                                                children: [
+                                                                    state.pkShooterStats.bestScore,
+                                                                    "/5"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                lineNumber: 95,
+                                                                columnNumber: 37
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 93,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 86,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex justify-between mt-3 text-xs font-bold tracking-widest pt-3 border-t border-white/5",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-gray-300",
+                                                        children: [
+                                                            state.pkShooterStats.totalWins,
+                                                            " WINS"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 99,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-gray-300",
+                                                        children: [
+                                                            state.pkShooterStats.totalPlayed,
+                                                            " PLAYED"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 100,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-neonBlue",
+                                                        children: [
+                                                            state.pkShooterStats.winStreak,
+                                                            " STREAK"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 101,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 98,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                        lineNumber: 83,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                lineNumber: 39,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-stadiumBlue/60 border border-white/10 rounded-2xl backdrop-blur-xl shadow-2xl overflow-hidden",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-black/40 px-6 py-4 border-b border-white/10 flex justify-between items-center",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "text-neonGreen animate-pulse",
+                                                    children: "●"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/pages/Dashboard.jsx",
+                                                    lineNumber: 110,
+                                                    columnNumber: 33
+                                                }, this),
+                                                " LIVE MARKETS"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/pages/Dashboard.jsx",
+                                            lineNumber: 109,
+                                            columnNumber: 29
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                        lineNumber: 108,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "p-2",
+                                        children: state.activeBets.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "p-12 text-center text-gray-500 font-bold uppercase tracking-widest text-sm",
+                                            children: "No Active Markets"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/pages/Dashboard.jsx",
+                                            lineNumber: 115,
+                                            columnNumber: 33
+                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "space-y-2",
+                                            children: state.activeBets.map((bet)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex justify-between items-center p-4 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 transition-colors",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex items-center gap-4",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "w-12 h-12 bg-black/50 rounded-lg flex items-center justify-center border border-white/5 font-heading text-xl text-neonGold shadow-inner",
+                                                                    children: bet.selection
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                    lineNumber: 121,
+                                                                    columnNumber: 49
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "font-bold text-white tracking-wider",
+                                                                            children: [
+                                                                                bet.homeAbbr,
+                                                                                " ",
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    className: "text-gray-600 text-xs mx-1",
+                                                                                    children: "VS"
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                                    lineNumber: 125,
+                                                                                    columnNumber: 121
+                                                                                }, this),
+                                                                                " ",
+                                                                                bet.awayAbbr
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                            lineNumber: 125,
+                                                                            columnNumber: 53
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "text-xs text-gray-400 font-bold uppercase mt-1",
+                                                                            children: [
+                                                                                "Stake: ",
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    className: "text-neonGold",
+                                                                                    children: bet.stake
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                                    lineNumber: 126,
+                                                                                    columnNumber: 124
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                            lineNumber: 126,
+                                                                            columnNumber: 53
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                    lineNumber: 124,
+                                                                    columnNumber: 49
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/pages/Dashboard.jsx",
+                                                            lineNumber: 120,
+                                                            columnNumber: 45
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-right",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-[10px] text-gray-500 font-bold uppercase mb-1",
+                                                                    children: "Status"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                    lineNumber: 130,
+                                                                    columnNumber: 49
+                                                                }, this),
+                                                                bet.resolved ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: `px-3 py-1 rounded font-bold text-xs uppercase ${bet.won ? 'bg-neonGreen/20 text-neonGreen border border-neonGreen/30' : 'bg-neonRed/20 text-neonRed border border-neonRed/30'}`,
+                                                                    children: bet.won ? 'WON' : 'LOST'
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                    lineNumber: 132,
+                                                                    columnNumber: 53
+                                                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "px-3 py-1 rounded font-bold text-xs uppercase bg-neonBlue/20 text-neonBlue border border-neonBlue/30 animate-pulse",
+                                                                    children: "PENDING"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/pages/Dashboard.jsx",
+                                                                    lineNumber: 136,
+                                                                    columnNumber: 53
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/pages/Dashboard.jsx",
+                                                            lineNumber: 129,
+                                                            columnNumber: 45
+                                                        }, this)
+                                                    ]
+                                                }, bet.id, true, {
+                                                    fileName: "[project]/src/pages/Dashboard.jsx",
+                                                    lineNumber: 119,
+                                                    columnNumber: 41
+                                                }, this))
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/pages/Dashboard.jsx",
+                                            lineNumber: 117,
+                                            columnNumber: 33
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                        lineNumber: 113,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                lineNumber: 107,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Dashboard.jsx",
+                        lineNumber: 36,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "bg-stadiumBlue/60 border border-white/10 rounded-2xl backdrop-blur-xl shadow-2xl flex flex-col h-[600px] overflow-hidden",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-black/40 px-6 py-4 border-b border-white/10",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-sm font-bold text-white uppercase tracking-widest",
+                                    children: "TRANSACTION LOG"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Dashboard.jsx",
+                                    lineNumber: 152,
+                                    columnNumber: 25
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                lineNumber: 151,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex-1 overflow-y-auto p-4 space-y-3 hide-scrollbar",
+                                children: state.activeBets.filter((b)=>b.resolved).length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "h-full flex flex-col items-center justify-center text-gray-500 p-6 text-center",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "text-4xl mb-4 opacity-50",
+                                            children: "🧾"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/pages/Dashboard.jsx",
+                                            lineNumber: 157,
+                                            columnNumber: 33
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "text-sm font-bold uppercase tracking-widest",
+                                            children: "No History"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/pages/Dashboard.jsx",
+                                            lineNumber: 158,
+                                            columnNumber: 33
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs mt-2",
+                                            children: "Resolved markets will appear here."
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/pages/Dashboard.jsx",
+                                            lineNumber: 159,
+                                            columnNumber: 33
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/pages/Dashboard.jsx",
+                                    lineNumber: 156,
+                                    columnNumber: 29
+                                }, this) : state.activeBets.filter((b)=>b.resolved).map((bet, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                                        initial: {
+                                            opacity: 0,
+                                            x: 20
+                                        },
+                                        animate: {
+                                            opacity: 1,
+                                            x: 0
+                                        },
+                                        transition: {
+                                            delay: i * 0.1
+                                        },
+                                        className: "p-3 border border-white/5 rounded-xl bg-black/40 flex justify-between items-center",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-xs font-bold text-gray-400",
+                                                        children: [
+                                                            bet.homeAbbr,
+                                                            " vs ",
+                                                            bet.awayAbbr
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 171,
+                                                        columnNumber: 41
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-[10px] text-gray-600 uppercase font-bold mt-1",
+                                                        children: [
+                                                            "Pick: ",
+                                                            bet.selection,
+                                                            " • Odds: ",
+                                                            bet.odds
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                                        lineNumber: 172,
+                                                        columnNumber: 41
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 170,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: `font-heading text-lg ${bet.won ? 'text-neonGreen drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]' : 'text-neonRed opacity-50'}`,
+                                                children: bet.won ? `+${(parseFloat(bet.stake) * parseFloat(bet.odds)).toFixed(2)}` : `-${bet.stake}`
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                                lineNumber: 174,
+                                                columnNumber: 37
+                                            }, this)
+                                        ]
+                                    }, `hist-${bet.id}-${i}`, true, {
+                                        fileName: "[project]/src/pages/Dashboard.jsx",
+                                        lineNumber: 163,
+                                        columnNumber: 33
+                                    }, this))
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Dashboard.jsx",
+                                lineNumber: 154,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Dashboard.jsx",
+                        lineNumber: 150,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/pages/Dashboard.jsx",
+                lineNumber: 34,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/pages/Dashboard.jsx",
+        lineNumber: 19,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/pages/Squad.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>Squad
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+;
+;
+function Squad() {
+    const { state, dispatch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    const team = state.teams[state.playerTeamIndex];
+    const togglePlayer = (id)=>dispatch({
+            type: 'TOGGLE_LINEUP',
+            payload: id
+        });
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "space-y-8 animate-in fade-in duration-500",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                className: "flex justify-between items-end",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                className: "text-3xl font-heading font-black",
+                                children: "SQUAD SELECTION"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Squad.jsx",
+                                lineNumber: 13,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-gray-400",
+                                children: "Manage your starting XI and tactics."
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Squad.jsx",
+                                lineNumber: 14,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Squad.jsx",
+                        lineNumber: 12,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        onClick: ()=>dispatch({
+                                type: 'AUTO_LINEUP'
+                            }),
+                        className: "px-8 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-all border border-white/10",
+                        children: "AUTO-PICK BEST XI"
+                    }, void 0, false, {
+                        fileName: "[project]/src/pages/Squad.jsx",
+                        lineNumber: 16,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/pages/Squad.jsx",
+                lineNumber: 11,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "grid grid-cols-1 lg:grid-cols-2 gap-8",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "pitch-container h-[600px]",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "formation-row",
+                                    children: state.selectedLineup.map((id)=>{
+                                        const p = team.players.find((x)=>x.id === id);
+                                        if (p?.position !== 'FWD') return null;
+                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "player-card",
+                                            onClick: ()=>togglePlayer(p.id),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-xl font-bold",
+                                                    children: p.strength
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/pages/Squad.jsx",
+                                                    lineNumber: 32,
+                                                    columnNumber: 115
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-xs truncate",
+                                                    children: p.name
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/pages/Squad.jsx",
+                                                    lineNumber: 32,
+                                                    columnNumber: 168
+                                                }, this)
+                                            ]
+                                        }, p.id, true, {
+                                            fileName: "[project]/src/pages/Squad.jsx",
+                                            lineNumber: 32,
+                                            columnNumber: 40
+                                        }, this);
+                                    })
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Squad.jsx",
+                                    lineNumber: 28,
+                                    columnNumber: 25
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "formation-row",
+                                    children: state.selectedLineup.map((id)=>{
+                                        const p = team.players.find((x)=>x.id === id);
+                                        if (p?.position !== 'MID') return null;
+                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "player-card",
+                                            onClick: ()=>togglePlayer(p.id),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-xl font-bold",
+                                                    children: p.strength
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/pages/Squad.jsx",
+                                                    lineNumber: 39,
+                                                    columnNumber: 115
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-xs truncate",
+                                                    children: p.name
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/pages/Squad.jsx",
+                                                    lineNumber: 39,
+                                                    columnNumber: 168
+                                                }, this)
+                                            ]
+                                        }, p.id, true, {
+                                            fileName: "[project]/src/pages/Squad.jsx",
+                                            lineNumber: 39,
+                                            columnNumber: 40
+                                        }, this);
+                                    })
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Squad.jsx",
+                                    lineNumber: 35,
+                                    columnNumber: 25
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "formation-row",
+                                    children: state.selectedLineup.map((id)=>{
+                                        const p = team.players.find((x)=>x.id === id);
+                                        if (p?.position !== 'DEF') return null;
+                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "player-card",
+                                            onClick: ()=>togglePlayer(p.id),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-xl font-bold",
+                                                    children: p.strength
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/pages/Squad.jsx",
+                                                    lineNumber: 46,
+                                                    columnNumber: 115
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-xs truncate",
+                                                    children: p.name
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/pages/Squad.jsx",
+                                                    lineNumber: 46,
+                                                    columnNumber: 168
+                                                }, this)
+                                            ]
+                                        }, p.id, true, {
+                                            fileName: "[project]/src/pages/Squad.jsx",
+                                            lineNumber: 46,
+                                            columnNumber: 40
+                                        }, this);
+                                    })
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Squad.jsx",
+                                    lineNumber: 42,
+                                    columnNumber: 25
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "formation-row",
+                                    children: state.selectedLineup.map((id)=>{
+                                        const p = team.players.find((x)=>x.id === id);
+                                        if (p?.position !== 'GK') return null;
+                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "player-card",
+                                            onClick: ()=>togglePlayer(p.id),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-xl font-bold",
+                                                    children: p.strength
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/pages/Squad.jsx",
+                                                    lineNumber: 53,
+                                                    columnNumber: 115
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-xs truncate",
+                                                    children: p.name
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/pages/Squad.jsx",
+                                                    lineNumber: 53,
+                                                    columnNumber: 168
+                                                }, this)
+                                            ]
+                                        }, p.id, true, {
+                                            fileName: "[project]/src/pages/Squad.jsx",
+                                            lineNumber: 53,
+                                            columnNumber: 40
+                                        }, this);
+                                    })
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Squad.jsx",
+                                    lineNumber: 49,
+                                    columnNumber: 25
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/pages/Squad.jsx",
+                            lineNumber: 27,
+                            columnNumber: 21
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/src/pages/Squad.jsx",
+                        lineNumber: 26,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md flex flex-col",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex justify-between items-center mb-6",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                        className: "font-bold text-gray-400 uppercase tracking-widest text-sm",
+                                        children: "Full Roster"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Squad.jsx",
+                                        lineNumber: 62,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: `px-3 py-1 rounded-full text-xs font-bold ${state.selectedLineup.length === 11 ? 'bg-neonGreen/20 text-neonGreen' : 'bg-neonRed/20 text-neonRed'}`,
+                                        children: [
+                                            state.selectedLineup.length,
+                                            "/11 SELECTED"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/Squad.jsx",
+                                        lineNumber: 63,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Squad.jsx",
+                                lineNumber: 61,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex-1 overflow-y-auto pr-2 space-y-6 max-h-[550px]",
+                                children: [
+                                    'FWD',
+                                    'MID',
+                                    'DEF',
+                                    'GK'
+                                ].map((pos)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-xs text-neonGold font-bold mb-3 border-b border-white/10 pb-1",
+                                                children: pos
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Squad.jsx",
+                                                lineNumber: 71,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "space-y-2",
+                                                children: team.players.filter((p)=>p.position === pos).sort((a, b)=>b.strength - a.strength).map((p)=>{
+                                                    const isSelected = state.selectedLineup.includes(p.id);
+                                                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        onClick: ()=>togglePlayer(p.id),
+                                                        className: `flex items-center justify-between p-4 rounded-xl cursor-pointer border transition-all ${isSelected ? 'bg-neonGreen/10 border-neonGreen shadow-[0_0_10px_rgba(16,185,129,0.1)]' : 'bg-black/40 border-white/5 hover:bg-white/10'}`,
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "flex items-center gap-4",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: `w-10 h-10 rounded-full flex items-center justify-center font-black text-lg ${isSelected ? 'bg-neonGreen text-black' : 'bg-gray-800 text-white'}`,
+                                                                        children: p.strength
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/pages/Squad.jsx",
+                                                                        lineNumber: 82,
+                                                                        columnNumber: 53
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                className: "font-bold",
+                                                                                children: p.name
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/pages/Squad.jsx",
+                                                                                lineNumber: 86,
+                                                                                columnNumber: 57
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                className: "text-xs text-gray-400 flex items-center gap-2",
+                                                                                children: [
+                                                                                    "Energy: ",
+                                                                                    p.energy,
+                                                                                    "%",
+                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                        className: "w-16 h-1 bg-gray-700 rounded-full overflow-hidden",
+                                                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                            className: "h-full bg-neonGreen",
+                                                                                            style: {
+                                                                                                width: `${p.energy}%`
+                                                                                            }
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/src/pages/Squad.jsx",
+                                                                                            lineNumber: 90,
+                                                                                            columnNumber: 65
+                                                                                        }, this)
+                                                                                    }, void 0, false, {
+                                                                                        fileName: "[project]/src/pages/Squad.jsx",
+                                                                                        lineNumber: 89,
+                                                                                        columnNumber: 61
+                                                                                    }, this)
+                                                                                ]
+                                                                            }, void 0, true, {
+                                                                                fileName: "[project]/src/pages/Squad.jsx",
+                                                                                lineNumber: 87,
+                                                                                columnNumber: 57
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/src/pages/Squad.jsx",
+                                                                        lineNumber: 85,
+                                                                        columnNumber: 53
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/pages/Squad.jsx",
+                                                                lineNumber: 81,
+                                                                columnNumber: 49
+                                                            }, this),
+                                                            isSelected && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "text-neonGreen text-xl bg-neonGreen/20 w-8 h-8 flex items-center justify-center rounded-full",
+                                                                children: "✓"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/pages/Squad.jsx",
+                                                                lineNumber: 95,
+                                                                columnNumber: 64
+                                                            }, this)
+                                                        ]
+                                                    }, p.id, true, {
+                                                        fileName: "[project]/src/pages/Squad.jsx",
+                                                        lineNumber: 76,
+                                                        columnNumber: 45
+                                                    }, this);
+                                                })
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Squad.jsx",
+                                                lineNumber: 72,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, pos, true, {
+                                        fileName: "[project]/src/pages/Squad.jsx",
+                                        lineNumber: 70,
+                                        columnNumber: 29
+                                    }, this))
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Squad.jsx",
+                                lineNumber: 68,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Squad.jsx",
+                        lineNumber: 60,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/pages/Squad.jsx",
+                lineNumber: 24,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/pages/Squad.jsx",
+        lineNumber: 10,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/components/BetSlip.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>BetSlip
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+;
+;
+;
+function BetSlip() {
+    const { state, dispatch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    const { betSlip, budget } = state;
+    const totalStake = betSlip.reduce((sum, b)=>sum + b.amount, 0);
+    const totalPotential = betSlip.reduce((sum, b)=>sum + b.amount * parseFloat(b.odds), 0);
+    const canConfirm = betSlip.length > 0 && totalStake <= budget;
+    if (betSlip.length === 0) {
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "bg-white/5 border border-white/10 rounded-2xl p-6 text-center",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "text-gray-500 text-sm font-bold uppercase tracking-widest mb-2",
+                    children: "Bet Slip"
+                }, void 0, false, {
+                    fileName: "[project]/src/components/BetSlip.jsx",
+                    lineNumber: 15,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "text-gray-600 text-xs py-8",
+                    children: "Click any odds to add a selection"
+                }, void 0, false, {
+                    fileName: "[project]/src/components/BetSlip.jsx",
+                    lineNumber: 16,
+                    columnNumber: 17
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/src/components/BetSlip.jsx",
+            lineNumber: 14,
+            columnNumber: 13
+        }, this);
+    }
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "bg-white/5 border border-white/10 rounded-2xl overflow-hidden",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "p-4 bg-neonGold/10 border-b border-neonGold/20 flex justify-between items-center",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "font-bold text-sm text-neonGold uppercase tracking-widest",
+                        children: [
+                            "Bet Slip (",
+                            betSlip.length,
+                            ")"
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/BetSlip.jsx",
+                        lineNumber: 24,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        onClick: ()=>dispatch({
+                                type: 'CLEAR_SLIP'
+                            }),
+                        className: "text-xs text-gray-400 hover:text-neonRed transition-colors",
+                        children: "Clear All"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/BetSlip.jsx",
+                        lineNumber: 25,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/BetSlip.jsx",
+                lineNumber: 23,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "p-4 space-y-3 max-h-[300px] overflow-y-auto hide-scrollbar",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnimatePresence"], {
+                    children: betSlip.map((bet)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                            initial: {
+                                opacity: 0,
+                                height: 0
+                            },
+                            animate: {
+                                opacity: 1,
+                                height: 'auto'
+                            },
+                            exit: {
+                                opacity: 0,
+                                height: 0
+                            },
+                            className: "bg-black/40 rounded-xl p-4 border border-white/5",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex justify-between items-start mb-3",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-xs text-gray-400",
+                                                    children: [
+                                                        bet.homeAbbr,
+                                                        " vs ",
+                                                        bet.awayAbbr
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/components/BetSlip.jsx",
+                                                    lineNumber: 40,
+                                                    columnNumber: 37
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "font-bold text-sm",
+                                                    children: [
+                                                        bet.selection === '1' ? bet.homeAbbr + ' Win' : bet.selection === '2' ? bet.awayAbbr + ' Win' : 'Draw',
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-neonGreen ml-2",
+                                                            children: [
+                                                                "@",
+                                                                bet.odds
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/components/BetSlip.jsx",
+                                                            lineNumber: 43,
+                                                            columnNumber: 41
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/components/BetSlip.jsx",
+                                                    lineNumber: 41,
+                                                    columnNumber: 37
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/BetSlip.jsx",
+                                            lineNumber: 39,
+                                            columnNumber: 33
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: ()=>dispatch({
+                                                    type: 'REMOVE_FROM_SLIP',
+                                                    payload: bet.matchId
+                                                }),
+                                            className: "text-gray-500 hover:text-neonRed text-lg leading-none",
+                                            children: "×"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/BetSlip.jsx",
+                                            lineNumber: 46,
+                                            columnNumber: 33
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/BetSlip.jsx",
+                                    lineNumber: 38,
+                                    columnNumber: 29
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex gap-2",
+                                    children: [
+                                        1000,
+                                        5000,
+                                        10000,
+                                        50000
+                                    ].map((amt)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: ()=>dispatch({
+                                                    type: 'UPDATE_SLIP_AMOUNT',
+                                                    payload: {
+                                                        matchId: bet.matchId,
+                                                        amount: amt
+                                                    }
+                                                }),
+                                            className: `flex-1 text-xs py-1.5 rounded-lg border transition-colors ${bet.amount === amt ? 'bg-neonGold/20 border-neonGold/50 text-neonGold' : 'border-white/10 text-gray-400 hover:border-white/30'}`,
+                                            children: amt >= 1000 ? `${amt / 1000}K` : amt
+                                        }, amt, false, {
+                                            fileName: "[project]/src/components/BetSlip.jsx",
+                                            lineNumber: 53,
+                                            columnNumber: 37
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/BetSlip.jsx",
+                                    lineNumber: 51,
+                                    columnNumber: 29
+                                }, this)
+                            ]
+                        }, bet.matchId, true, {
+                            fileName: "[project]/src/components/BetSlip.jsx",
+                            lineNumber: 31,
+                            columnNumber: 25
+                        }, this))
+                }, void 0, false, {
+                    fileName: "[project]/src/components/BetSlip.jsx",
+                    lineNumber: 29,
+                    columnNumber: 17
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/src/components/BetSlip.jsx",
+                lineNumber: 28,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "p-4 border-t border-white/10 space-y-3",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex justify-between text-sm",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "text-gray-400",
+                                children: "Total Stake"
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/BetSlip.jsx",
+                                lineNumber: 69,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: `font-bold ${totalStake > budget ? 'text-neonRed' : 'text-white'}`,
+                                children: [
+                                    "€",
+                                    totalStake.toLocaleString()
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/BetSlip.jsx",
+                                lineNumber: 70,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/BetSlip.jsx",
+                        lineNumber: 68,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex justify-between text-sm",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "text-gray-400",
+                                children: "Potential Return"
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/BetSlip.jsx",
+                                lineNumber: 73,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "font-bold text-neonGreen",
+                                children: [
+                                    "€",
+                                    Math.floor(totalPotential).toLocaleString()
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/BetSlip.jsx",
+                                lineNumber: 74,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/BetSlip.jsx",
+                        lineNumber: 72,
+                        columnNumber: 17
+                    }, this),
+                    totalStake > budget && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "text-xs text-neonRed text-center",
+                        children: "Insufficient funds"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/BetSlip.jsx",
+                        lineNumber: 77,
+                        columnNumber: 21
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        onClick: ()=>dispatch({
+                                type: 'CONFIRM_SLIP'
+                            }),
+                        disabled: !canConfirm,
+                        className: `w-full py-3 rounded-xl font-bold text-sm transition-all ${canConfirm ? 'bg-neonGreen text-black hover:scale-[1.02]' : 'bg-gray-800 text-gray-500 cursor-not-allowed'}`,
+                        children: "CONFIRM BETS"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/BetSlip.jsx",
+                        lineNumber: 79,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/BetSlip.jsx",
+                lineNumber: 67,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/components/BetSlip.jsx",
+        lineNumber: 22,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/components/LiveSimulation.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>LiveSimulation
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Flag.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs [app-ssr] (ecmascript)");
+;
+;
+;
+;
+;
+function LiveSimulation() {
+    const { state, dispatch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    const { liveSim, round } = state;
+    const { minute, scores, playerMatchEvents, active, allResults } = liveSim;
+    const eventsEndRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
+    // Auto-scroll the commentary feed to the bottom
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        if (eventsEndRef.current) {
+            eventsEndRef.current.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    }, [
+        playerMatchEvents
+    ]);
+    if (!active) return null;
+    const matchData = allResults || [];
+    // Separate the player's match from the rest
+    const playerMatchIdx = matchData.findIndex((m)=>m.fixture.home === state.playerTeamIndex || m.fixture.away === state.playerTeamIndex);
+    const playerMatch = playerMatchIdx !== -1 ? matchData[playerMatchIdx] : null;
+    // The other 23 matches
+    const otherMatches = matchData.filter((_, idx)=>idx !== playerMatchIdx);
+    const renderCompactRow = (match)=>{
+        const { homeTeam, awayTeam, fixture } = match;
+        const matchId = `${fixture.home}-${fixture.away}`;
+        const score = scores[matchId] || {
+            home: 0,
+            away: 0
+        };
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "flex items-center justify-between py-2 px-3 border-b border-white/5 hover:bg-white/10 transition-colors",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex items-center gap-2 w-5/12 justify-end",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "text-xs font-bold text-gray-300 uppercase tracking-wider",
+                            children: homeTeam.abbr
+                        }, void 0, false, {
+                            fileName: "[project]/src/components/LiveSimulation.jsx",
+                            lineNumber: 38,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                            code: homeTeam.code,
+                            size: "w-5 h-5 rounded-sm shadow-md"
+                        }, void 0, false, {
+                            fileName: "[project]/src/components/LiveSimulation.jsx",
+                            lineNumber: 39,
+                            columnNumber: 21
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/components/LiveSimulation.jsx",
+                    lineNumber: 37,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "w-2/12 flex justify-center text-lg font-heading font-bold px-2 bg-black/40 rounded border border-white/5 shadow-inner",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].span, {
+                            initial: {
+                                scale: 1.5,
+                                color: '#10B981'
+                            },
+                            animate: {
+                                scale: 1,
+                                color: '#fff'
+                            },
+                            transition: {
+                                duration: 0.5
+                            },
+                            children: score.home
+                        }, `h-${score.home}`, false, {
+                            fileName: "[project]/src/components/LiveSimulation.jsx",
+                            lineNumber: 43,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "mx-1 text-gray-600",
+                            children: "-"
+                        }, void 0, false, {
+                            fileName: "[project]/src/components/LiveSimulation.jsx",
+                            lineNumber: 44,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].span, {
+                            initial: {
+                                scale: 1.5,
+                                color: '#10B981'
+                            },
+                            animate: {
+                                scale: 1,
+                                color: '#fff'
+                            },
+                            transition: {
+                                duration: 0.5
+                            },
+                            children: score.away
+                        }, `a-${score.away}`, false, {
+                            fileName: "[project]/src/components/LiveSimulation.jsx",
+                            lineNumber: 45,
+                            columnNumber: 21
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/components/LiveSimulation.jsx",
+                    lineNumber: 42,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex items-center gap-2 w-5/12 justify-start",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                            code: awayTeam.code,
+                            size: "w-5 h-5 rounded-sm shadow-md"
+                        }, void 0, false, {
+                            fileName: "[project]/src/components/LiveSimulation.jsx",
+                            lineNumber: 49,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "text-xs font-bold text-gray-300 uppercase tracking-wider",
+                            children: awayTeam.abbr
+                        }, void 0, false, {
+                            fileName: "[project]/src/components/LiveSimulation.jsx",
+                            lineNumber: 50,
+                            columnNumber: 21
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/components/LiveSimulation.jsx",
+                    lineNumber: 48,
+                    columnNumber: 17
+                }, this)
+            ]
+        }, matchId, true, {
+            fileName: "[project]/src/components/LiveSimulation.jsx",
+            lineNumber: 36,
+            columnNumber: 13
+        }, this);
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+        initial: {
+            opacity: 0,
+            scale: 0.95
+        },
+        animate: {
+            opacity: 1,
+            scale: 1
+        },
+        className: "absolute inset-0 z-50 flex flex-col p-6 gap-6 font-body",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "absolute inset-0 bg-stadiumBlue z-[-1] overflow-hidden",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px] opacity-20"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                        lineNumber: 64,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "absolute top-0 inset-x-0 h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neonGreen/20 via-stadiumBlue/80 to-stadiumBlue opacity-90 blur-3xl"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                        lineNumber: 65,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "absolute bottom-0 inset-x-0 h-[300px] bg-gradient-to-t from-black to-transparent"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                        lineNumber: 66,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/LiveSimulation.jsx",
+                lineNumber: 63,
+                columnNumber: 13
+            }, this),
+            playerMatch && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "bg-gradient-to-b from-stadiumBlue/90 to-black/80 border border-white/20 rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)] relative overflow-hidden flex items-center justify-between backdrop-blur-2xl",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-neonGreen via-pitchLime to-neonGreen"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                        lineNumber: 72,
+                        columnNumber: 21
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "w-1/4 text-center",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "text-neonGreen font-bold uppercase tracking-widest text-[10px] mb-1",
+                                children: "Match Clock"
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                lineNumber: 76,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "text-7xl font-heading font-bold text-white leading-none tracking-wider drop-shadow-lg",
+                                children: [
+                                    minute < 10 ? `0${minute}` : minute,
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-pitchLime animate-pulse",
+                                        children: "'"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 78,
+                                        columnNumber: 66
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                lineNumber: 77,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "mt-3",
+                                children: liveSim.halfTimePause ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-xs font-bold text-neonGold tracking-widest bg-neonGold/10 border border-neonGold/30 px-6 py-1.5 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.2)]",
+                                    children: "HALF TIME"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/LiveSimulation.jsx",
+                                    lineNumber: 82,
+                                    columnNumber: 33
+                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-xs font-bold text-black tracking-widest bg-pitchLime px-6 py-1.5 rounded-full shadow-[0_0_15px_rgba(192,255,0,0.5)] animate-pulse",
+                                    children: "LIVE MATCH"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/LiveSimulation.jsx",
+                                    lineNumber: 84,
+                                    columnNumber: 33
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                lineNumber: 80,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                        lineNumber: 75,
+                        columnNumber: 21
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "w-2/4 flex items-center justify-center gap-10",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "text-center flex flex-col items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "relative",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "absolute inset-0 bg-white/20 blur-xl rounded-full"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                lineNumber: 93,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                code: playerMatch.homeTeam.code,
+                                                size: "w-24 h-24",
+                                                className: "mb-3 relative z-10 shadow-2xl border-4 border-white/10 rounded-xl"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                lineNumber: 94,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 92,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "font-heading text-3xl font-bold tracking-widest uppercase drop-shadow-md",
+                                        children: playerMatch.homeTeam.abbr
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 96,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                lineNumber: 91,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "text-8xl font-heading font-bold px-10 py-2 bg-black/60 border-y-2 border-white/10 rounded-3xl shadow-inner flex items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].span, {
+                                        initial: {
+                                            scale: 1.5,
+                                            color: '#C0FF00'
+                                        },
+                                        animate: {
+                                            scale: 1,
+                                            color: '#fff'
+                                        },
+                                        className: "drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]",
+                                        children: scores[`${playerMatch.fixture.home}-${playerMatch.fixture.away}`]?.home || 0
+                                    }, `ph-${scores[`${playerMatch.fixture.home}-${playerMatch.fixture.away}`]?.home || 0}`, false, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 100,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "mx-6 text-gray-700 text-6xl pb-2",
+                                        children: "-"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 103,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].span, {
+                                        initial: {
+                                            scale: 1.5,
+                                            color: '#C0FF00'
+                                        },
+                                        animate: {
+                                            scale: 1,
+                                            color: '#fff'
+                                        },
+                                        className: "drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]",
+                                        children: scores[`${playerMatch.fixture.home}-${playerMatch.fixture.away}`]?.away || 0
+                                    }, `pa-${scores[`${playerMatch.fixture.home}-${playerMatch.fixture.away}`]?.away || 0}`, false, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 104,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                lineNumber: 99,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "text-center flex flex-col items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "relative",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "absolute inset-0 bg-white/20 blur-xl rounded-full"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                lineNumber: 111,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                code: playerMatch.awayTeam.code,
+                                                size: "w-24 h-24",
+                                                className: "mb-3 relative z-10 shadow-2xl border-4 border-white/10 rounded-xl"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                lineNumber: 112,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 110,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "font-heading text-3xl font-bold tracking-widest uppercase drop-shadow-md",
+                                        children: playerMatch.awayTeam.abbr
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 114,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                lineNumber: 109,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                        lineNumber: 90,
+                        columnNumber: 21
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "w-1/4 flex justify-end",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: ()=>dispatch({
+                                    type: 'SKIP_SIM'
+                                }),
+                            className: "px-8 py-4 rounded-full border border-white/20 bg-white/5 text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105",
+                            children: "SKIP TO END >>"
+                        }, void 0, false, {
+                            fileName: "[project]/src/components/LiveSimulation.jsx",
+                            lineNumber: 120,
+                            columnNumber: 25
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                        lineNumber: 119,
+                        columnNumber: 21
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/LiveSimulation.jsx",
+                lineNumber: 71,
+                columnNumber: 17
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex-1 flex gap-6 min-h-0",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex-[2] bg-stadiumBlue/60 border border-white/10 backdrop-blur-xl rounded-3xl overflow-hidden flex flex-col shadow-2xl",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-black/40 px-6 py-4 border-b border-white/10 flex justify-between items-center",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex items-center gap-3",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "w-2 h-2 rounded-full bg-neonRed animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/LiveSimulation.jsx",
+                                            lineNumber: 135,
+                                            columnNumber: 29
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                            className: "font-bold tracking-widest text-xs uppercase text-white",
+                                            children: [
+                                                "Global Scores ",
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "text-gray-500 mx-2",
+                                                    children: "•"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                    lineNumber: 136,
+                                                    columnNumber: 114
+                                                }, this),
+                                                " Round ",
+                                                round - 1
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/LiveSimulation.jsx",
+                                            lineNumber: 136,
+                                            columnNumber: 29
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/LiveSimulation.jsx",
+                                    lineNumber: 134,
+                                    columnNumber: 25
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                lineNumber: 133,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex-1 p-6 overflow-y-auto hide-scrollbar",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "grid grid-cols-3 gap-x-10 gap-y-2",
+                                    children: otherMatches.map(renderCompactRow)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/LiveSimulation.jsx",
+                                    lineNumber: 141,
+                                    columnNumber: 25
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                lineNumber: 140,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                        lineNumber: 132,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex-1 bg-stadiumBlue/60 border border-white/10 backdrop-blur-xl rounded-3xl overflow-hidden flex flex-col shadow-2xl",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-black/40 px-6 py-4 border-b border-white/10 flex justify-between items-center",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-xs font-bold text-white uppercase tracking-widest",
+                                        children: "Match Commentary"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 150,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-[10px] bg-neonBlue/20 text-neonBlue border border-neonBlue/30 px-2 py-0.5 rounded font-bold uppercase",
+                                        children: "LIVE FEED"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 151,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                lineNumber: 149,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex-1 p-5 overflow-y-auto hide-scrollbar flex flex-col gap-3",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnimatePresence"], {
+                                        children: playerMatchEvents.slice().reverse().map((evt)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                                                initial: {
+                                                    opacity: 0,
+                                                    y: 10,
+                                                    scale: 0.95
+                                                },
+                                                animate: {
+                                                    opacity: 1,
+                                                    y: 0,
+                                                    scale: 1
+                                                },
+                                                className: `p-3 rounded-xl border flex gap-4 text-sm shadow-md transition-colors ${evt.type === 'goal' ? 'bg-pitchLime/10 border-pitchLime text-white shadow-[0_0_15px_rgba(192,255,0,0.15)]' : 'bg-black/40 border-white/5 text-gray-300'}`,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: `font-heading text-xl w-6 text-center ${evt.type === 'goal' ? 'text-pitchLime' : 'text-gray-500'}`,
+                                                        children: [
+                                                            evt.minute,
+                                                            "'"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                        lineNumber: 163,
+                                                        columnNumber: 37
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex-1 leading-tight self-center",
+                                                        children: [
+                                                            evt.type === 'goal' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "mr-2 text-lg",
+                                                                children: "⚽"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                                lineNumber: 165,
+                                                                columnNumber: 65
+                                                            }, this),
+                                                            evt.type === 'yellow' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "mr-2",
+                                                                children: "🟨"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                                lineNumber: 166,
+                                                                columnNumber: 67
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "font-bold text-white mr-1 text-base",
+                                                                children: evt.player
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                                lineNumber: 167,
+                                                                columnNumber: 41
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: evt.type === 'goal' ? 'text-pitchLime font-bold uppercase tracking-wider text-xs ml-1' : 'opacity-80 text-xs ml-1',
+                                                                children: evt.desc
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                                lineNumber: 168,
+                                                                columnNumber: 41
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                        lineNumber: 164,
+                                                        columnNumber: 37
+                                                    }, this)
+                                                ]
+                                            }, evt.key, true, {
+                                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                                lineNumber: 157,
+                                                columnNumber: 33
+                                            }, this))
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 155,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        ref: eventsEndRef
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 173,
+                                        columnNumber: 25
+                                    }, this),
+                                    playerMatchEvents.length === 0 && minute > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-center text-gray-500 italic mt-8 text-sm font-bold uppercase tracking-widest",
+                                        children: "Kickoff! The match is underway."
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                                        lineNumber: 175,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/LiveSimulation.jsx",
+                                lineNumber: 154,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/LiveSimulation.jsx",
+                        lineNumber: 148,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/LiveSimulation.jsx",
+                lineNumber: 130,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/components/LiveSimulation.jsx",
+        lineNumber: 57,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/data/oracleFixtures.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Mock API response simulating real-world international fixtures fetched from RapidAPI
+__turbopack_context__.s([
+    "fetchRealWorldFixtures",
+    ()=>fetchRealWorldFixtures
+]);
+const fetchRealWorldFixtures = async ()=>{
+    // Simulate network delay
+    await new Promise((resolve)=>setTimeout(resolve, 800));
+    return [
+        {
+            id: 'wc-qual-001',
+            homeTeam: 'Brazil',
+            homeCode: 'BR',
+            awayTeam: 'Argentina',
+            awayCode: 'AR',
+            odds: {
+                home: '2.10',
+                draw: '3.40',
+                away: '3.10'
+            },
+            status: 'upcoming'
+        },
+        {
+            id: 'wc-qual-002',
+            homeTeam: 'England',
+            homeCode: 'GB-ENG',
+            awayTeam: 'France',
+            awayCode: 'FR',
+            odds: {
+                home: '2.80',
+                draw: '3.20',
+                away: '2.50'
+            },
+            status: 'upcoming'
+        },
+        {
+            id: 'wc-qual-003',
+            homeTeam: 'Portugal',
+            homeCode: 'PT',
+            awayTeam: 'Spain',
+            awayCode: 'ES',
+            odds: {
+                home: '2.90',
+                draw: '3.10',
+                away: '2.60'
+            },
+            status: 'upcoming'
+        },
+        {
+            id: 'wc-qual-004',
+            homeTeam: 'Germany',
+            homeCode: 'DE',
+            awayTeam: 'Italy',
+            awayCode: 'IT',
+            odds: {
+                home: '2.30',
+                draw: '3.30',
+                away: '3.00'
+            },
+            status: 'upcoming'
+        }
+    ];
+};
+}),
+"[project]/src/components/OracleDashboard.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>OracleDashboard
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$data$2f$oracleFixtures$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/data/oracleFixtures.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Flag.jsx [app-ssr] (ecmascript)");
+;
+;
+;
+;
+function OracleDashboard() {
+    const [fixtures, setFixtures] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [simulatedAdminAction, setSimulatedAdminAction] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [userBets, setUserBets] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({}); // Track mocked bets
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        async function loadFixtures() {
+            setLoading(true);
+            const data = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$data$2f$oracleFixtures$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchRealWorldFixtures"])();
+            setFixtures(data);
+            setLoading(false);
+        }
+        loadFixtures();
+    }, []);
+    const handlePlaceBet = (fixtureId, selection)=>{
+        alert(`MetaMask Prompt: Sign transaction to place bet on ${selection} for fixture ${fixtureId} via PredictionMarket.sol`);
+        // Mock successful transaction
+        setUserBets((prev)=>({
+                ...prev,
+                [fixtureId]: {
+                    selection,
+                    claimed: false
+                }
+            }));
+        setSimulatedAdminAction(`Bet placed on ${selection}`);
+        setTimeout(()=>setSimulatedAdminAction(null), 3000);
+    };
+    const handleResolveMarket = (fixtureId)=>{
+        alert(`Oracle Node Action: Calling PredictionMarket.sol -> resolveMarket(${fixtureId}, HOME_WIN) based on real-world RapidAPI data.`);
+        setFixtures((prev)=>prev.map((f)=>f.id === fixtureId ? {
+                    ...f,
+                    status: 'resolved',
+                    result: 'home'
+                } : f));
+        setSimulatedAdminAction(`Market ${fixtureId} resolved as HOME WIN`);
+        setTimeout(()=>setSimulatedAdminAction(null), 3000);
+    };
+    const handleClaimWinnings = (fixtureId)=>{
+        alert(`MetaMask Prompt: Sign transaction to claim winnings from PredictionMarket.sol for fixture ${fixtureId}`);
+        setUserBets((prev)=>({
+                ...prev,
+                [fixtureId]: {
+                    ...prev[fixtureId],
+                    claimed: true
+                }
+            }));
+        setSimulatedAdminAction(`Winnings claimed for ${fixtureId}`);
+        setTimeout(()=>setSimulatedAdminAction(null), 3000);
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "flex-1 flex gap-8 h-full",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex-[2] flex flex-col bg-black/40 border border-neonBlue/30 rounded-3xl overflow-hidden shadow-[0_0_20px_rgba(0,191,255,0.1)]",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "bg-neonBlue/10 px-6 py-4 border-b border-neonBlue/30 flex justify-between items-center",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-3",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-xl",
+                                        children: "🔮"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                        lineNumber: 49,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                        className: "font-bold tracking-widest text-sm text-neonBlue uppercase",
+                                        children: "X Layer Oracle Markets"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                        lineNumber: 50,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                lineNumber: 48,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "text-xs font-bold text-gray-400 bg-black/50 px-3 py-1 rounded-full border border-white/10",
+                                children: "Data: RapidAPI World Cup Feeds"
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                lineNumber: 52,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                        lineNumber: 47,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex-1 p-6 overflow-y-auto hide-scrollbar space-y-4",
+                        children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex justify-center items-center h-40",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "text-neonBlue animate-pulse font-bold tracking-widest",
+                                children: "FETCHING ON-CHAIN DATA..."
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                lineNumber: 58,
+                                columnNumber: 29
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/src/components/OracleDashboard.jsx",
+                            lineNumber: 57,
+                            columnNumber: 25
+                        }, this) : fixtures.map((f)=>{
+                            const userBet = userBets[f.id];
+                            const isResolved = f.status === 'resolved';
+                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-black/60 border border-white/10 rounded-2xl p-6 relative overflow-hidden group",
+                                children: [
+                                    isResolved && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "absolute inset-0 bg-black/80 z-10 flex items-center justify-center backdrop-blur-sm",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "text-center",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-2xl font-black text-white mb-2",
+                                                    children: "MARKET RESOLVED"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                    lineNumber: 69,
+                                                    columnNumber: 45
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "text-sm font-bold text-neonGold uppercase tracking-widest",
+                                                    children: [
+                                                        "Result: ",
+                                                        f.result
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                    lineNumber: 70,
+                                                    columnNumber: 45
+                                                }, this),
+                                                userBet && !userBet.claimed && userBet.selection === f.result && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    onClick: ()=>handleClaimWinnings(f.id),
+                                                    className: "mt-4 px-6 py-2 bg-neonGold text-black font-bold rounded hover:bg-white transition-colors shadow-[0_0_15px_rgba(255,215,0,0.5)]",
+                                                    children: "CLAIM WINNINGS"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                    lineNumber: 72,
+                                                    columnNumber: 49
+                                                }, this),
+                                                userBet && userBet.claimed && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "mt-4 text-xs font-bold text-gray-500 uppercase",
+                                                    children: "Payout Claimed"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                    lineNumber: 77,
+                                                    columnNumber: 49
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/OracleDashboard.jsx",
+                                            lineNumber: 68,
+                                            columnNumber: 41
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                        lineNumber: 67,
+                                        columnNumber: 52
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex justify-between items-center mb-6",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center gap-4 w-5/12 justify-end",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "font-bold text-lg text-white",
+                                                        children: f.homeTeam
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                        lineNumber: 84,
+                                                        columnNumber: 45
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                        code: f.homeCode,
+                                                        size: "w-8 h-8"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                        lineNumber: 85,
+                                                        columnNumber: 45
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                lineNumber: 83,
+                                                columnNumber: 41
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-2/12 flex justify-center text-xs font-bold text-gray-500 uppercase",
+                                                children: "VS"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                lineNumber: 87,
+                                                columnNumber: 41
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center gap-4 w-5/12 justify-start",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                        code: f.awayCode,
+                                                        size: "w-8 h-8"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                        lineNumber: 89,
+                                                        columnNumber: 45
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "font-bold text-lg text-white",
+                                                        children: f.awayTeam
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                        lineNumber: 90,
+                                                        columnNumber: 45
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                lineNumber: 88,
+                                                columnNumber: 41
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                        lineNumber: 82,
+                                        columnNumber: 37
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex gap-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: ()=>handlePlaceBet(f.id, 'home'),
+                                                disabled: userBet || isResolved,
+                                                className: `flex-1 py-3 rounded-xl border transition-all ${userBet?.selection === 'home' ? 'bg-neonBlue text-black border-neonBlue' : 'bg-white/5 border-white/10 hover:border-neonBlue/50 hover:bg-neonBlue/5'}`,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-[10px] text-gray-400 font-bold uppercase mb-1",
+                                                        children: "HOME"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                        lineNumber: 96,
+                                                        columnNumber: 45
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "font-black text-lg",
+                                                        children: f.odds.home
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                        lineNumber: 97,
+                                                        columnNumber: 45
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                lineNumber: 95,
+                                                columnNumber: 41
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: ()=>handlePlaceBet(f.id, 'draw'),
+                                                disabled: userBet || isResolved,
+                                                className: `flex-1 py-3 rounded-xl border transition-all ${userBet?.selection === 'draw' ? 'bg-neonBlue text-black border-neonBlue' : 'bg-white/5 border-white/10 hover:border-neonBlue/50 hover:bg-neonBlue/5'}`,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-[10px] text-gray-400 font-bold uppercase mb-1",
+                                                        children: "DRAW"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                        lineNumber: 100,
+                                                        columnNumber: 45
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "font-black text-lg",
+                                                        children: f.odds.draw
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                        lineNumber: 101,
+                                                        columnNumber: 45
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                lineNumber: 99,
+                                                columnNumber: 41
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: ()=>handlePlaceBet(f.id, 'away'),
+                                                disabled: userBet || isResolved,
+                                                className: `flex-1 py-3 rounded-xl border transition-all ${userBet?.selection === 'away' ? 'bg-neonBlue text-black border-neonBlue' : 'bg-white/5 border-white/10 hover:border-neonBlue/50 hover:bg-neonBlue/5'}`,
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-[10px] text-gray-400 font-bold uppercase mb-1",
+                                                        children: "AWAY"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                        lineNumber: 104,
+                                                        columnNumber: 45
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "font-black text-lg",
+                                                        children: f.odds.away
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                        lineNumber: 105,
+                                                        columnNumber: 45
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                lineNumber: 103,
+                                                columnNumber: 41
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                        lineNumber: 94,
+                                        columnNumber: 37
+                                    }, this)
+                                ]
+                            }, f.id, true, {
+                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                lineNumber: 66,
+                                columnNumber: 33
+                            }, this);
+                        })
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                        lineNumber: 55,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/OracleDashboard.jsx",
+                lineNumber: 46,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex-1 flex flex-col gap-6",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "bg-black/60 border border-neonRed/30 rounded-3xl p-6 shadow-[0_0_20px_rgba(255,0,0,0.1)]",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-2 mb-6",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "w-2 h-2 rounded-full bg-neonRed animate-pulse"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                        lineNumber: 119,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                        className: "font-bold text-xs uppercase tracking-widest text-neonRed",
+                                        children: "Oracle Resolver Node"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                        lineNumber: 120,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                lineNumber: 118,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-xs text-gray-400 mb-6 leading-relaxed",
+                                children: [
+                                    "This panel simulates the backend Oracle Node. On Mainnet, an automated script will fetch RapidAPI results and call ",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("code", {
+                                        className: "text-neonRed",
+                                        children: "resolveMarket()"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                        lineNumber: 123,
+                                        columnNumber: 140
+                                    }, this),
+                                    " on the smart contract."
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                lineNumber: 122,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "space-y-3",
+                                children: [
+                                    fixtures.filter((f)=>f.status === 'upcoming').map((f)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: ()=>handleResolveMarket(f.id),
+                                            className: "w-full py-3 px-4 bg-white/5 border border-white/10 hover:border-neonRed/50 rounded-xl text-left flex justify-between items-center transition-colors group",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "text-[10px] text-gray-500 font-bold uppercase mb-1",
+                                                            children: "TRIGGER RESULT FETCH"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                            lineNumber: 134,
+                                                            columnNumber: 37
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "font-bold text-sm text-gray-300 group-hover:text-white transition-colors",
+                                                            children: [
+                                                                f.homeTeam,
+                                                                " vs ",
+                                                                f.awayTeam
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                            lineNumber: 135,
+                                                            columnNumber: 37
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                    lineNumber: 133,
+                                                    columnNumber: 33
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "text-neonRed text-xl",
+                                                    children: "⚡"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/OracleDashboard.jsx",
+                                                    lineNumber: 137,
+                                                    columnNumber: 33
+                                                }, this)
+                                            ]
+                                        }, `resolve-${f.id}`, true, {
+                                            fileName: "[project]/src/components/OracleDashboard.jsx",
+                                            lineNumber: 128,
+                                            columnNumber: 29
+                                        }, this)),
+                                    fixtures.filter((f)=>f.status === 'upcoming').length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-center text-xs text-gray-500 py-4",
+                                        children: "All markets resolved."
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                                        lineNumber: 141,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/OracleDashboard.jsx",
+                                lineNumber: 126,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                        lineNumber: 117,
+                        columnNumber: 17
+                    }, this),
+                    simulatedAdminAction && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "bg-neonGreen/10 border border-neonGreen text-neonGreen p-4 rounded-xl text-sm font-bold text-center animate-in fade-in",
+                        children: simulatedAdminAction
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/OracleDashboard.jsx",
+                        lineNumber: 147,
+                        columnNumber: 21
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/OracleDashboard.jsx",
+                lineNumber: 116,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/components/OracleDashboard.jsx",
+        lineNumber: 44,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/pages/Matchday.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>Matchday
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Flag.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$BetSlip$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/BetSlip.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$LiveSimulation$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/LiveSimulation.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$OracleDashboard$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/OracleDashboard.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$MatchSim$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/engine/MatchSim.js [app-ssr] (ecmascript)");
+;
+;
+;
+;
+;
+;
+;
+;
+function Matchday() {
+    const { state, dispatch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    const [mode, setMode] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('league');
+    const currentRoundIdx = state.round - 1;
+    const fixtures = state.fixtures[currentRoundIdx] || [];
+    // Find player's match
+    const playerMatch = fixtures.find((f)=>f.home === state.playerTeamIndex || f.away === state.playerTeamIndex);
+    // Only show the 6 banger fixtures that have active markets
+    const bangerFixtures = fixtures.filter((f)=>{
+        const matchId = `${state.round - 1}-${f.home}-${f.away}`;
+        return state.markets.some((m)=>m.id === matchId);
+    });
+    const handleSimulate = ()=>{
+        if (state.selectedLineup.length < 11) {
+            dispatch({
+                type: 'ADD_TOAST',
+                payload: {
+                    message: 'Incomplete squad. Auto-filling lineup.',
+                    type: 'info'
+                }
+            });
+            dispatch({
+                type: 'AUTO_LINEUP'
+            });
+        }
+        dispatch({
+            type: 'START_LIVE_SIM'
+        });
+    };
+    const handleOddsClick = (matchId, selection, odds, homeAbbr, awayAbbr)=>{
+        dispatch({
+            type: 'ADD_TO_SLIP',
+            payload: {
+                matchId,
+                selection,
+                odds,
+                homeAbbr,
+                awayAbbr
+            }
+        });
+    };
+    const renderHeroMatch = ()=>{
+        if (!playerMatch) return null;
+        const homeTeam = state.teams[playerMatch.home];
+        const awayTeam = state.teams[playerMatch.away];
+        const homeIsPlayer = playerMatch.home === state.playerTeamIndex;
+        const playerStrength = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$MatchSim$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["calculateTeamStrength"])(state.teams[state.playerTeamIndex], state.selectedLineup).toFixed(1);
+        const opponentStrength = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$MatchSim$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["calculateTeamStrength"])(homeIsPlayer ? awayTeam : homeTeam, null).toFixed(1);
+        const winProb = parseFloat(playerStrength) / (parseFloat(playerStrength) + parseFloat(opponentStrength)) * 100;
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "bg-gradient-to-br from-stadiumBlue/80 to-black/60 border border-white/10 rounded-2xl p-8 relative overflow-hidden shadow-2xl mb-8 group backdrop-blur-xl",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-neonGreen to-pitchLime"
+                }, void 0, false, {
+                    fileName: "[project]/src/pages/Matchday.jsx",
+                    lineNumber: 54,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex justify-between items-center mb-6",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "text-xs text-neonGreen font-bold uppercase tracking-widest flex items-center gap-2",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "w-2 h-2 rounded-full bg-neonGreen animate-pulse"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 58,
+                                    columnNumber: 25
+                                }, this),
+                                "YOUR NEXT MATCH"
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/pages/Matchday.jsx",
+                            lineNumber: 57,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "text-xs font-heading font-bold tracking-widest text-white bg-black/50 px-4 py-1.5 rounded border border-white/5 shadow-inner",
+                            children: [
+                                "OVR: ",
+                                playerStrength,
+                                " vs ",
+                                opponentStrength
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/pages/Matchday.jsx",
+                            lineNumber: 61,
+                            columnNumber: 21
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/pages/Matchday.jsx",
+                    lineNumber: 56,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex justify-between items-center mb-8",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "text-center w-2/5 flex flex-col items-center",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                    code: homeTeam.code,
+                                    size: "w-24 h-24",
+                                    className: "mb-4 shadow-[0_0_20px_rgba(255,255,255,0.1)] border-2 border-white/5 rounded-xl group-hover:scale-105 transition-transform duration-500"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 68,
+                                    columnNumber: 25
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "font-heading text-3xl font-bold tracking-widest uppercase drop-shadow-md",
+                                    children: homeTeam.abbr
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 69,
+                                    columnNumber: 25
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/pages/Matchday.jsx",
+                            lineNumber: 67,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "text-xl font-heading font-bold text-gray-500 bg-black/40 px-6 py-2 rounded-xl border border-white/5 shadow-inner",
+                            children: "VS"
+                        }, void 0, false, {
+                            fileName: "[project]/src/pages/Matchday.jsx",
+                            lineNumber: 71,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "text-center w-2/5 flex flex-col items-center",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                    code: awayTeam.code,
+                                    size: "w-24 h-24",
+                                    className: "mb-4 shadow-[0_0_20px_rgba(255,255,255,0.1)] border-2 border-white/5 rounded-xl group-hover:scale-105 transition-transform duration-500"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 73,
+                                    columnNumber: 25
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "font-heading text-3xl font-bold tracking-widest uppercase drop-shadow-md",
+                                    children: awayTeam.abbr
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 74,
+                                    columnNumber: 25
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/pages/Matchday.jsx",
+                            lineNumber: 72,
+                            columnNumber: 21
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/pages/Matchday.jsx",
+                    lineNumber: 66,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "space-y-2 bg-black/40 p-4 rounded-xl border border-white/5",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex justify-between text-xs text-gray-400 font-bold uppercase tracking-widest",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    children: "Win Probability"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 80,
+                                    columnNumber: 25
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-white",
+                                    children: [
+                                        winProb.toFixed(0),
+                                        "%"
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 81,
+                                    columnNumber: 25
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/pages/Matchday.jsx",
+                            lineNumber: 79,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "h-2 bg-black/80 rounded-full overflow-hidden shadow-inner",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "h-full bg-gradient-to-r from-neonGreen to-pitchLime transition-all duration-1000 shadow-[0_0_10px_rgba(16,185,129,0.5)]",
+                                style: {
+                                    width: `${winProb}%`
+                                }
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Matchday.jsx",
+                                lineNumber: 84,
+                                columnNumber: 25
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/src/pages/Matchday.jsx",
+                            lineNumber: 83,
+                            columnNumber: 21
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/pages/Matchday.jsx",
+                    lineNumber: 78,
+                    columnNumber: 17
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/src/pages/Matchday.jsx",
+            lineNumber: 53,
+            columnNumber: 13
+        }, this);
+    };
+    const renderFixtureRow = (f)=>{
+        const homeTeam = state.teams[f.home];
+        const awayTeam = state.teams[f.away];
+        const matchId = `${state.round - 1}-${f.home}-${f.away}`;
+        const market = state.markets.find((m)=>m.id === matchId);
+        const slipItem = state.betSlip.find((b)=>b.matchId === matchId);
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "flex items-center justify-between p-5 border-b border-white/5 hover:bg-white/5 transition-colors group",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex-1 flex items-center gap-6",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex flex-col gap-3",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-4",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                        code: homeTeam.code,
+                                        size: "w-6 h-6 rounded-sm shadow-md"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Matchday.jsx",
+                                        lineNumber: 104,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "font-heading text-xl font-bold tracking-wider w-16 drop-shadow-sm group-hover:text-neonGold transition-colors",
+                                        children: homeTeam.abbr
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Matchday.jsx",
+                                        lineNumber: 105,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Matchday.jsx",
+                                lineNumber: 103,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-4",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                        code: awayTeam.code,
+                                        size: "w-6 h-6 rounded-sm shadow-md"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Matchday.jsx",
+                                        lineNumber: 108,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "font-heading text-xl font-bold tracking-wider w-16 drop-shadow-sm group-hover:text-neonGold transition-colors",
+                                        children: awayTeam.abbr
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Matchday.jsx",
+                                        lineNumber: 109,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Matchday.jsx",
+                                lineNumber: 107,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Matchday.jsx",
+                        lineNumber: 102,
+                        columnNumber: 21
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/src/pages/Matchday.jsx",
+                    lineNumber: 101,
+                    columnNumber: 17
+                }, this),
+                market ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex gap-3",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: ()=>handleOddsClick(matchId, '1', market.odds1, homeTeam.abbr, awayTeam.abbr),
+                            className: `flex flex-col items-center justify-center w-16 py-3 rounded-xl border transition-all ${slipItem?.selection === '1' ? 'bg-neonGold text-black border-neonGold shadow-[0_0_15px_rgba(245,158,11,0.4)]' : 'bg-black/50 border-white/10 hover:border-neonGold/50 text-white shadow-inner'}`,
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-[10px] opacity-70 font-bold uppercase mb-1",
+                                    children: "HOME"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 120,
+                                    columnNumber: 29
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "font-heading text-xl leading-none",
+                                    children: market.odds1
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 121,
+                                    columnNumber: 29
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/pages/Matchday.jsx",
+                            lineNumber: 116,
+                            columnNumber: 25
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: ()=>handleOddsClick(matchId, 'X', market.oddsX, homeTeam.abbr, awayTeam.abbr),
+                            className: `flex flex-col items-center justify-center w-16 py-3 rounded-xl border transition-all ${slipItem?.selection === 'X' ? 'bg-neonGold text-black border-neonGold shadow-[0_0_15px_rgba(245,158,11,0.4)]' : 'bg-black/50 border-white/10 hover:border-neonGold/50 text-white shadow-inner'}`,
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-[10px] opacity-70 font-bold uppercase mb-1",
+                                    children: "DRAW"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 127,
+                                    columnNumber: 29
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "font-heading text-xl leading-none",
+                                    children: market.oddsX
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 128,
+                                    columnNumber: 29
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/pages/Matchday.jsx",
+                            lineNumber: 123,
+                            columnNumber: 25
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: ()=>handleOddsClick(matchId, '2', market.odds2, homeTeam.abbr, awayTeam.abbr),
+                            className: `flex flex-col items-center justify-center w-16 py-3 rounded-xl border transition-all ${slipItem?.selection === '2' ? 'bg-neonGold text-black border-neonGold shadow-[0_0_15px_rgba(245,158,11,0.4)]' : 'bg-black/50 border-white/10 hover:border-neonGold/50 text-white shadow-inner'}`,
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-[10px] opacity-70 font-bold uppercase mb-1",
+                                    children: "AWAY"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 134,
+                                    columnNumber: 29
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "font-heading text-xl leading-none",
+                                    children: market.odds2
+                                }, void 0, false, {
+                                    fileName: "[project]/src/pages/Matchday.jsx",
+                                    lineNumber: 135,
+                                    columnNumber: 29
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/pages/Matchday.jsx",
+                            lineNumber: 130,
+                            columnNumber: 25
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/pages/Matchday.jsx",
+                    lineNumber: 115,
+                    columnNumber: 21
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "text-xs text-gray-600 font-bold uppercase tracking-widest px-4",
+                    children: "Odds Closed"
+                }, void 0, false, {
+                    fileName: "[project]/src/pages/Matchday.jsx",
+                    lineNumber: 139,
+                    columnNumber: 21
+                }, this)
+            ]
+        }, matchId, true, {
+            fileName: "[project]/src/pages/Matchday.jsx",
+            lineNumber: 100,
+            columnNumber: 13
+        }, this);
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "flex gap-8 h-[calc(100vh-140px)] relative font-body",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$LiveSimulation$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                fileName: "[project]/src/pages/Matchday.jsx",
+                lineNumber: 147,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex-1 flex flex-col min-w-0",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                        className: "flex justify-between items-end mb-6",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                        className: "text-4xl font-heading font-bold uppercase tracking-wider drop-shadow-md",
+                                        children: [
+                                            "MATCHDAY ",
+                                            state.round
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/Matchday.jsx",
+                                        lineNumber: 152,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "text-gray-400 font-bold uppercase tracking-widest text-xs mt-1",
+                                        children: "Review Odds & Place Predictions"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Matchday.jsx",
+                                        lineNumber: 153,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Matchday.jsx",
+                                lineNumber: 151,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex bg-black/50 border border-white/10 rounded-xl p-1.5 shadow-inner",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: ()=>setMode('league'),
+                                        className: `px-6 py-2 rounded-lg text-sm font-bold uppercase tracking-widest transition-colors ${mode === 'league' ? 'bg-white/20 text-white shadow' : 'text-gray-500 hover:text-gray-300'}`,
+                                        children: "LEAGUE"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Matchday.jsx",
+                                        lineNumber: 156,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: ()=>setMode('oracle'),
+                                        className: `px-6 py-2 rounded-lg text-sm font-bold uppercase tracking-widest transition-all flex items-center gap-2 ${mode === 'oracle' ? 'bg-neonBlue/20 text-neonBlue border border-neonBlue/30 shadow-[0_0_10px_rgba(59,130,246,0.3)]' : 'text-gray-500 hover:text-gray-300'}`,
+                                        children: [
+                                            "ORACLE ",
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-[10px] bg-neonBlue text-black px-1.5 rounded-sm shadow-md",
+                                                children: "WEB3"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Matchday.jsx",
+                                                lineNumber: 158,
+                                                columnNumber: 36
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/Matchday.jsx",
+                                        lineNumber: 157,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Matchday.jsx",
+                                lineNumber: 155,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Matchday.jsx",
+                        lineNumber: 150,
+                        columnNumber: 17
+                    }, this),
+                    mode === 'league' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex-1 overflow-y-auto hide-scrollbar pr-4",
+                        children: [
+                            renderHeroMatch(),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-stadiumBlue/60 border border-white/10 rounded-2xl overflow-hidden shadow-2xl mb-8 backdrop-blur-xl",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-black/40 px-8 py-4 border-b border-white/10 flex justify-between items-center",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-sm font-bold text-neonGold uppercase tracking-widest flex items-center gap-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.5)]",
+                                                        children: "🔥"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/pages/Matchday.jsx",
+                                                        lineNumber: 170,
+                                                        columnNumber: 37
+                                                    }, this),
+                                                    " FEATURED BANGER MARKETS"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Matchday.jsx",
+                                                lineNumber: 169,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-xs text-white font-bold bg-black/60 px-3 py-1 rounded border border-white/5 shadow-inner",
+                                                children: [
+                                                    "Top ",
+                                                    bangerFixtures.length,
+                                                    " Matches"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Matchday.jsx",
+                                                lineNumber: 172,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/Matchday.jsx",
+                                        lineNumber: 168,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "p-2",
+                                        children: bangerFixtures.map(renderFixtureRow)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Matchday.jsx",
+                                        lineNumber: 174,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Matchday.jsx",
+                                lineNumber: 167,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Matchday.jsx",
+                        lineNumber: 164,
+                        columnNumber: 21
+                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$OracleDashboard$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                        fileName: "[project]/src/pages/Matchday.jsx",
+                        lineNumber: 180,
+                        columnNumber: 21
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/pages/Matchday.jsx",
+                lineNumber: 149,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "w-80 flex flex-col gap-6",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        onClick: handleSimulate,
+                        className: "w-full py-6 rounded-2xl font-heading text-2xl font-bold uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] relative overflow-hidden group bg-neonGreen text-black hover:scale-105 border border-pitchLime",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Matchday.jsx",
+                                lineNumber: 189,
+                                columnNumber: 21
+                            }, this),
+                            "SIMULATE MATCHDAY ▶"
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Matchday.jsx",
+                        lineNumber: 185,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$BetSlip$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                        fileName: "[project]/src/pages/Matchday.jsx",
+                        lineNumber: 193,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/pages/Matchday.jsx",
+                lineNumber: 184,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/pages/Matchday.jsx",
+        lineNumber: 146,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/pages/Collection.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>Collection
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-ssr] (ecmascript)");
+;
+;
+;
+const BADGE_TYPES = [
+    {
+        id: 0,
+        name: 'First Victory',
+        icon: '⚽',
+        desc: 'Win your first match',
+        rarity: 'common'
+    },
+    {
+        id: 1,
+        name: 'Dominant Force',
+        icon: '🔥',
+        desc: '5-match win streak',
+        rarity: 'rare'
+    },
+    {
+        id: 2,
+        name: 'Oracle Master',
+        icon: '🔮',
+        desc: '3 correct predictions in a row',
+        rarity: 'rare'
+    },
+    {
+        id: 3,
+        name: 'Big Spender',
+        icon: '💎',
+        desc: 'Place a bet of €50,000+',
+        rarity: 'rare'
+    },
+    {
+        id: 4,
+        name: 'Unbeaten Run',
+        icon: '🛡️',
+        desc: '10 matches without a loss',
+        rarity: 'legendary'
+    },
+    {
+        id: 5,
+        name: 'Top of the Table',
+        icon: '👑',
+        desc: 'Reach #1 in the league',
+        rarity: 'legendary'
+    },
+    {
+        id: 6,
+        name: 'Season Veteran',
+        icon: '📅',
+        desc: 'Complete 20 matchdays',
+        rarity: 'common'
+    },
+    {
+        id: 7,
+        name: 'Collector',
+        icon: '🎖️',
+        desc: 'Mint 5 other badges',
+        rarity: 'legendary'
+    },
+    {
+        id: 8,
+        name: 'PK Novice',
+        icon: '🎯',
+        desc: 'Win 1 Penalty Shootout',
+        rarity: 'common'
+    },
+    {
+        id: 9,
+        name: 'PK Veteran',
+        icon: '🏅',
+        desc: 'Win 5 Penalty Shootouts',
+        rarity: 'rare'
+    },
+    {
+        id: 10,
+        name: 'PK Legend',
+        icon: '🏆',
+        desc: 'Win 10 Penalty Shootouts',
+        rarity: 'legendary'
+    }
+];
+function Collection() {
+    const { state } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    const getBadgeStyle = (rarity)=>{
+        if (rarity === 'common') return 'from-gray-500/20 to-gray-900/40 border-gray-500/50 shadow-[0_0_15px_rgba(156,163,175,0.2)]';
+        if (rarity === 'rare') return 'from-neonBlue/20 to-purple-900/40 border-neonBlue/50 shadow-[0_0_15px_rgba(0,255,255,0.2)]';
+        return 'from-neonGold/20 to-orange-900/40 border-neonGold/80 shadow-[0_0_30px_rgba(255,215,0,0.4)]';
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "space-y-8 animate-in fade-in duration-500",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                        className: "text-3xl font-heading font-black flex items-center gap-3",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "text-neonGold text-4xl",
+                                children: "🏆"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Collection.jsx",
+                                lineNumber: 31,
+                                columnNumber: 21
+                            }, this),
+                            " MY COLLECTION"
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Collection.jsx",
+                        lineNumber: 30,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: "text-gray-400",
+                        children: [
+                            "You have earned ",
+                            state.nftBadges.length,
+                            " of ",
+                            BADGE_TYPES.length,
+                            " available badges."
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Collection.jsx",
+                        lineNumber: 33,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/pages/Collection.jsx",
+                lineNumber: 29,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "grid grid-cols-2 md:grid-cols-4 gap-6",
+                children: BADGE_TYPES.map((badgeDef)=>{
+                    const earnedBadge = state.nftBadges.find((b)=>b.type === badgeDef.id);
+                    const isLocked = !earnedBadge;
+                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                        whileHover: !isLocked ? {
+                            scale: 1.05
+                        } : {},
+                        className: `relative rounded-3xl p-6 border flex flex-col items-center text-center overflow-hidden transition-all duration-300 ${isLocked ? 'bg-black/60 border-white/5 opacity-50 grayscale' : `bg-gradient-to-br ${getBadgeStyle(badgeDef.rarity)} cursor-pointer`}`,
+                        children: [
+                            !isLocked && badgeDef.rarity === 'legendary' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Collection.jsx",
+                                lineNumber: 48,
+                                columnNumber: 33
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "text-6xl mb-4 drop-shadow-2xl",
+                                children: isLocked ? '🔒' : badgeDef.icon
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Collection.jsx",
+                                lineNumber: 51,
+                                columnNumber: 29
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                className: "font-bold text-lg mb-1 font-heading",
+                                children: badgeDef.name
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Collection.jsx",
+                                lineNumber: 53,
+                                columnNumber: 29
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-xs text-gray-400 mb-4 h-8",
+                                children: badgeDef.desc
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Collection.jsx",
+                                lineNumber: 54,
+                                columnNumber: 29
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: `mt-auto text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full ${isLocked ? 'bg-white/10 text-gray-500' : 'bg-black/50 text-white border border-white/20'}`,
+                                children: isLocked ? 'LOCKED' : 'MINTED'
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Collection.jsx",
+                                lineNumber: 56,
+                                columnNumber: 29
+                            }, this),
+                            earnedBadge && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "absolute inset-0 bg-black/90 backdrop-blur opacity-0 hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-3xl mb-2",
+                                        children: badgeDef.icon
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Collection.jsx",
+                                        lineNumber: 63,
+                                        columnNumber: 37
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-xs text-neonGold font-bold mb-2",
+                                        children: [
+                                            "Earned: ",
+                                            earnedBadge.date
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/Collection.jsx",
+                                        lineNumber: 64,
+                                        columnNumber: 37
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-[10px] text-gray-400 text-center",
+                                        children: earnedBadge.info
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Collection.jsx",
+                                        lineNumber: 65,
+                                        columnNumber: 37
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "mt-3 text-[9px] text-neonBlue bg-neonBlue/10 px-2 py-1 rounded w-full truncate",
+                                        children: [
+                                            "TX: 0x",
+                                            ((earnedBadge.type + 1) * 123456789).toString(16).slice(0, 8),
+                                            "... on X Layer"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/Collection.jsx",
+                                        lineNumber: 66,
+                                        columnNumber: 37
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Collection.jsx",
+                                lineNumber: 62,
+                                columnNumber: 33
+                            }, this)
+                        ]
+                    }, badgeDef.id, true, {
+                        fileName: "[project]/src/pages/Collection.jsx",
+                        lineNumber: 42,
+                        columnNumber: 25
+                    }, this);
+                })
+            }, void 0, false, {
+                fileName: "[project]/src/pages/Collection.jsx",
+                lineNumber: 36,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/pages/Collection.jsx",
+        lineNumber: 28,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/engine/PKShootoutEngine.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "PKShootoutEngine",
+    ()=>PKShootoutEngine
+]);
+class PKShootoutEngine {
+    constructor(canvas, onGameEnd, updateScoreboard){
+        this.canvas = canvas;
+        this.fieldctx = canvas.getContext('2d');
+        this.onGameEnd = onGameEnd;
+        this.updateScoreboard = updateScoreboard;
+        // Fixed internal resolution matching original game
+        this.canvas.width = 1275;
+        this.canvas.height = 735;
+        this.scoresArr = [];
+        this.attempt = 0;
+        this.score = 0;
+        this.shotInProgress = false;
+        this.audioCache = {};
+        this.loadAudio();
+        this.diveSelection = null;
+        this.hopeSoloImageSource = "/pk-shooter/images/solo-ready.png";
+        this.theKeeperImg = new Image();
+        this.theBallImg = new Image();
+        this.theBallImg.src = "/pk-shooter/images/ball.png";
+        this.keeper = {
+            x: 590,
+            y: 410,
+            width: 89,
+            height: 190
+        };
+        this.ball = {
+            x: 595,
+            y: 660,
+            width: 80,
+            height: 80
+        };
+        this.renderInterval = null;
+        this.activeIntervals = []; // track all dive/ball intervals for cleanup
+        this.isAnimating = false;
+        this.boundKeyDown = this.handleKeyDown.bind(this);
+    }
+    loadAudio() {
+        [
+            'oleole',
+            'whistle',
+            'cheering',
+            'win',
+            'lose'
+        ].forEach((name)=>{
+            const audio = new Audio(`/pk-shooter/audio/${name}.mp3`);
+            audio.preload = "auto";
+            this.audioCache[name] = audio;
+        });
+    }
+    playSound(name) {
+        if (this.audioCache[name]) {
+            this.audioCache[name].currentTime = 0;
+            this.audioCache[name].play().catch(()=>{});
+        }
+    }
+    stopSound(name) {
+        if (this.audioCache[name]) {
+            this.audioCache[name].pause();
+        }
+    }
+    start() {
+        // Clean up any previous game state
+        this.clearAllIntervals();
+        this.scoresArr = [];
+        this.attempt = 0;
+        this.score = 0;
+        this.shotInProgress = false;
+        this.resetPositions();
+        if (this.updateScoreboard) this.updateScoreboard([]);
+        this.playSound('oleole');
+        setTimeout(()=>{
+            this.stopSound('oleole');
+            this.playSound('whistle');
+            this.playSound('cheering');
+        }, 1000);
+        this.isAnimating = true;
+        this.startRenderLoop();
+        document.addEventListener('keydown', this.boundKeyDown);
+    }
+    stop() {
+        this.isAnimating = false;
+        this.clearAllIntervals();
+        document.removeEventListener('keydown', this.boundKeyDown);
+        Object.values(this.audioCache).forEach((a)=>{
+            a.pause();
+            a.currentTime = 0;
+        });
+    }
+    clearAllIntervals() {
+        if (this.renderInterval) {
+            clearInterval(this.renderInterval);
+            this.renderInterval = null;
+        }
+        this.activeIntervals.forEach((id)=>clearInterval(id));
+        this.activeIntervals = [];
+    }
+    resetPositions() {
+        this.keeper = {
+            x: 590,
+            y: 410,
+            width: 89,
+            height: 190
+        };
+        this.ball = {
+            x: 595,
+            y: 660,
+            width: 80,
+            height: 80
+        };
+        this.hopeSoloImageSource = "/pk-shooter/images/solo-ready.png";
+    }
+    startRenderLoop() {
+        if (this.renderInterval) clearInterval(this.renderInterval);
+        this.renderInterval = setInterval(()=>{
+            if (!this.isAnimating) return;
+            this.fieldctx.clearRect(0, 0, 1275, 735);
+            this.theKeeperImg.src = this.hopeSoloImageSource;
+            this.fieldctx.drawImage(this.theKeeperImg, this.keeper.x, this.keeper.y);
+            this.fieldctx.drawImage(this.theBallImg, this.ball.x, this.ball.y, this.ball.width, this.ball.height);
+        }, 50);
+    }
+    handleKeyDown(event) {
+        // Support both event.which (legacy) and event.keyCode, plus event.key
+        let key = event.which || event.keyCode;
+        if (!key || key === 0) {
+            // Fallback to event.key for modern browsers
+            const keyMap = {
+                'a': 65,
+                'A': 65,
+                's': 83,
+                'S': 83,
+                'z': 90,
+                'Z': 90,
+                'x': 88,
+                'X': 88
+            };
+            key = keyMap[event.key] || 0;
+        }
+        if (![
+            65,
+            83,
+            90,
+            88
+        ].includes(key)) return;
+        if (this.shotInProgress) return; // prevent double-firing
+        event.preventDefault();
+        this.shotInProgress = true;
+        document.removeEventListener('keydown', this.boundKeyDown);
+        this.diveSelection = [
+            1,
+            2,
+            3,
+            4
+        ][Math.floor(Math.random() * 4)];
+        this.shootBall(key);
+        this.diveKeeper(key);
+    }
+    // Ball trajectory functions — faithfully replicated from original main.js
+    // Original uses nested if blocks, NOT else-if chains
+    shootBall(keyPressed) {
+        const that = this;
+        let start;
+        function topLeft() {
+            if (that.ball.x !== 185 && that.ball.y !== 250) {
+                that.ball.x -= 5;
+                that.ball.y -= 5;
+            }
+            if (that.ball.x !== 185) {
+                that.ball.x -= 5;
+            }
+            if (that.ball.y !== 250) {
+                that.ball.y -= 5;
+            } else {
+                clearInterval(start);
+            }
+        }
+        function topRight() {
+            if (that.ball.x !== 1000 && that.ball.y !== 250) {
+                that.ball.x += 5;
+                that.ball.y -= 5;
+            }
+            if (that.ball.x !== 1000) {
+                that.ball.x += 5;
+            }
+            if (that.ball.y !== 250) {
+                that.ball.y -= 5;
+            } else {
+                clearInterval(start);
+            }
+        }
+        function bottomLeft() {
+            if (that.ball.x !== 185 && that.ball.y !== 500) {
+                that.ball.x -= 5;
+                that.ball.y -= 3;
+            }
+            if (that.ball.x !== 185) {
+                that.ball.x -= 5;
+            }
+            if (that.ball.y !== 500) {
+                that.ball.y -= 1;
+            } else {
+                clearInterval(start);
+            }
+        }
+        function bottomRight() {
+            if (that.ball.x !== 1010 && that.ball.y !== 500) {
+                that.ball.x += 5;
+                that.ball.y -= 3;
+            }
+            if (that.ball.x !== 1010) {
+                that.ball.x += 5;
+            }
+            if (that.ball.y !== 500) {
+                that.ball.y -= 1;
+            } else {
+                clearInterval(start);
+            }
+        }
+        switch(keyPressed){
+            case 65:
+                start = setInterval(topLeft, 10);
+                break;
+            case 83:
+                start = setInterval(topRight, 10);
+                break;
+            case 90:
+                start = setInterval(bottomLeft, 10);
+                break;
+            case 88:
+                start = setInterval(bottomRight, 10);
+                break;
+        }
+        if (start) this.activeIntervals.push(start);
+    }
+    // Keeper dive functions — faithfully replicated from original main.js
+    diveKeeper(keyPressed) {
+        const that = this;
+        let start;
+        function topLeft() {
+            that.hopeSoloImageSource = "/pk-shooter/images/solo-topleft.png";
+            if (that.keeper.x !== 185 && that.keeper.y !== 250) {
+                that.keeper.x -= 5;
+                that.keeper.y -= 3;
+            }
+            if (that.keeper.x !== 185) {
+                that.keeper.x -= 5;
+            }
+            if (that.keeper.y !== 250) {
+                that.keeper.y -= 1;
+            } else {
+                clearInterval(start);
+            }
+        }
+        function topRight() {
+            that.hopeSoloImageSource = "/pk-shooter/images/solo-topright.png";
+            if (that.keeper.x !== 1000 && that.keeper.y !== 250) {
+                that.keeper.x += 5;
+                that.keeper.y -= 5;
+            }
+            if (that.keeper.x !== 1000) {
+                that.keeper.x += 5;
+            }
+            if (that.keeper.y !== 250) {
+                that.keeper.y -= 5;
+            } else {
+                clearInterval(start);
+            }
+        }
+        function bottomLeft() {
+            that.hopeSoloImageSource = "/pk-shooter/images/solo-bottomleft.png";
+            if (that.keeper.x !== 185 && that.keeper.y !== 500) {
+                that.keeper.x -= 5;
+                that.keeper.y += 1;
+            }
+            if (that.keeper.x !== 185) {
+                that.keeper.x -= 5;
+            }
+            if (that.keeper.y !== 500) {
+                that.keeper.y += 1;
+            } else {
+                clearInterval(start);
+            }
+        }
+        function bottomRight() {
+            that.hopeSoloImageSource = "/pk-shooter/images/solo-bottomright.png";
+            if (that.keeper.x !== 700 && that.keeper.y !== 500) {
+                that.keeper.x += 5;
+                that.keeper.y += 3;
+            }
+            if (that.keeper.x !== 700) {
+                that.keeper.x += 5;
+            }
+            if (that.keeper.y !== 500) {
+                that.keeper.y += 3;
+            } else {
+                clearInterval(start);
+            }
+        }
+        // Determine keeper dive direction (random, independent of player's shot)
+        switch(this.diveSelection){
+            case 1:
+                start = setInterval(topLeft, 1);
+                break;
+            case 2:
+                start = setInterval(topRight, 1);
+                break;
+            case 3:
+                start = setInterval(bottomLeft, 1);
+                break;
+            case 4:
+                start = setInterval(bottomRight, 1);
+                break;
+        }
+        if (start) this.activeIntervals.push(start);
+        // Determine goal or save: map key to target quadrant
+        // A=65 → topLeft=1, S=83 → topRight=2, Z=90 → bottomLeft=3, X=88 → bottomRight=4
+        const keyToQuadrant = {
+            65: 1,
+            83: 2,
+            90: 3,
+            88: 4
+        };
+        const shotQuadrant = keyToQuadrant[keyPressed];
+        this.attempt++;
+        if (this.diveSelection === shotQuadrant) {
+            this.scoresArr.push("save");
+        } else {
+            this.score++;
+            this.scoresArr.push("goal");
+        }
+        if (this.updateScoreboard) this.updateScoreboard([
+            ...this.scoresArr
+        ]);
+        this.endGameCheck();
+    }
+    endGameCheck() {
+        if (this.scoresArr.length === 5) {
+            // Game over — stop accepting input
+            const won = this.score >= 3;
+            if (won) {
+                this.playSound('win');
+            } else {
+                this.playSound('lose');
+            }
+            setTimeout(()=>{
+                this.stop();
+                this.onGameEnd({
+                    won,
+                    score: this.score,
+                    attempts: 5
+                });
+            }, 1100);
+        } else {
+            // Next shot — reset after delay
+            this.playSound('cheering');
+            setTimeout(()=>{
+                // Clear old ball/keeper movement intervals before resetting
+                this.activeIntervals.forEach((id)=>clearInterval(id));
+                this.activeIntervals = [];
+                this.resetPositions();
+                this.shotInProgress = false;
+                document.addEventListener('keydown', this.boundKeyDown);
+            }, 2200);
+        }
+    }
+}
+}),
+"[project]/src/pages/PKShooter.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>PKShooter
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$PKShootoutEngine$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/engine/PKShootoutEngine.js [app-ssr] (ecmascript)");
+;
+;
+;
+;
+function PKShooter() {
+    const canvasRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const engineRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const { dispatch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    const [gameState, setGameState] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('pre'); // pre, playing, post
+    const [result, setResult] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [scoreboard, setScoreboard] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const handleGameEnd = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((gameResult)=>{
+        setResult(gameResult);
+        setGameState('post');
+        dispatch({
+            type: 'PK_GAME_END',
+            payload: gameResult
+        });
+    }, [
+        dispatch
+    ]);
+    const handleScoreboard = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useCallback"])((scores)=>{
+        setScoreboard(scores);
+    }, []);
+    // Create engine once on mount
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        if (!canvasRef.current) return;
+        engineRef.current = new __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$engine$2f$PKShootoutEngine$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PKShootoutEngine"](canvasRef.current, handleGameEnd, handleScoreboard);
+        return ()=>{
+            if (engineRef.current) {
+                engineRef.current.stop();
+                engineRef.current = null;
+            }
+        };
+    }, [
+        handleGameEnd,
+        handleScoreboard
+    ]);
+    const startGame = ()=>{
+        setGameState('playing');
+        setResult(null);
+        setScoreboard([]);
+        if (engineRef.current) {
+            engineRef.current.start();
+        }
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "w-full h-full relative overflow-hidden bg-black rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]",
+        children: [
+            gameState === 'playing' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "absolute top-8 left-1/2 -translate-x-1/2 z-50 flex gap-4 p-4 bg-black/50 backdrop-blur-md rounded-full border border-white/20",
+                children: [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ].map((i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: `w-10 h-10 rounded-full border-4 shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-colors duration-300 ${scoreboard[i] === 'goal' ? 'bg-neonGreen border-white shadow-[0_0_15px_rgba(0,255,0,0.5)]' : scoreboard[i] === 'save' ? 'bg-red-500 border-white shadow-[0_0_15px_rgba(255,0,0,0.5)]' : 'bg-transparent border-white/30'}`
+                    }, i, false, {
+                        fileName: "[project]/src/pages/PKShooter.jsx",
+                        lineNumber: 57,
+                        columnNumber: 25
+                    }, this))
+            }, void 0, false, {
+                fileName: "[project]/src/pages/PKShooter.jsx",
+                lineNumber: 55,
+                columnNumber: 17
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "w-full h-full flex items-center justify-center",
+                style: {
+                    backgroundImage: 'url(/pk-shooter/images/background.png)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                },
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("canvas", {
+                    ref: canvasRef,
+                    width: "1275",
+                    height: "735",
+                    style: {
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain'
+                    },
+                    tabIndex: 0
+                }, void 0, false, {
+                    fileName: "[project]/src/pages/PKShooter.jsx",
+                    lineNumber: 71,
+                    columnNumber: 17
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/src/pages/PKShooter.jsx",
+                lineNumber: 69,
+                columnNumber: 13
+            }, this),
+            gameState === 'pre' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center text-white p-8 z-50",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                        className: "text-5xl font-heading font-black text-neonGold mb-8 drop-shadow-[0_0_20px_rgba(255,215,0,0.4)]",
+                        children: "PK SHOOTOUT"
+                    }, void 0, false, {
+                        fileName: "[project]/src/pages/PKShooter.jsx",
+                        lineNumber: 83,
+                        columnNumber: 21
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "bg-white/5 border border-white/10 rounded-2xl p-8 mb-8 max-w-md text-center backdrop-blur-md",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-lg text-gray-300 mb-4",
+                                children: [
+                                    "Can you best ",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-white font-bold",
+                                        children: "Hope Solo"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/PKShooter.jsx",
+                                        lineNumber: 88,
+                                        columnNumber: 42
+                                    }, this),
+                                    " in a penalty kick shootout?"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/PKShooter.jsx",
+                                lineNumber: 87,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "grid grid-cols-2 gap-4 my-6",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-black/40 rounded-xl p-3 border border-white/10",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("kbd", {
+                                                className: "text-neonGold font-mono font-bold text-2xl",
+                                                children: "A"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/PKShooter.jsx",
+                                                lineNumber: 92,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-xs text-gray-400 mt-1",
+                                                children: "Top Left"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/PKShooter.jsx",
+                                                lineNumber: 93,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/PKShooter.jsx",
+                                        lineNumber: 91,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-black/40 rounded-xl p-3 border border-white/10",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("kbd", {
+                                                className: "text-neonGold font-mono font-bold text-2xl",
+                                                children: "S"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/PKShooter.jsx",
+                                                lineNumber: 96,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-xs text-gray-400 mt-1",
+                                                children: "Top Right"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/PKShooter.jsx",
+                                                lineNumber: 97,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/PKShooter.jsx",
+                                        lineNumber: 95,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-black/40 rounded-xl p-3 border border-white/10",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("kbd", {
+                                                className: "text-neonGold font-mono font-bold text-2xl",
+                                                children: "Z"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/PKShooter.jsx",
+                                                lineNumber: 100,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-xs text-gray-400 mt-1",
+                                                children: "Bottom Left"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/PKShooter.jsx",
+                                                lineNumber: 101,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/PKShooter.jsx",
+                                        lineNumber: 99,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-black/40 rounded-xl p-3 border border-white/10",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("kbd", {
+                                                className: "text-neonGold font-mono font-bold text-2xl",
+                                                children: "X"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/PKShooter.jsx",
+                                                lineNumber: 104,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-xs text-gray-400 mt-1",
+                                                children: "Bottom Right"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/PKShooter.jsx",
+                                                lineNumber: 105,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/PKShooter.jsx",
+                                        lineNumber: 103,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/PKShooter.jsx",
+                                lineNumber: 90,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-sm text-gray-400",
+                                children: [
+                                    "Score ",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-neonGreen font-bold",
+                                        children: "3+ out of 5"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/PKShooter.jsx",
+                                        lineNumber: 109,
+                                        columnNumber: 35
+                                    }, this),
+                                    " to win!"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/PKShooter.jsx",
+                                lineNumber: 108,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/PKShooter.jsx",
+                        lineNumber: 86,
+                        columnNumber: 21
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        onClick: startGame,
+                        className: "px-16 py-6 bg-neonGold text-black text-2xl font-black rounded-full hover:scale-105 transition-transform shadow-[0_0_30px_rgba(255,215,0,0.5)] active:scale-95",
+                        children: "START SHOOTOUT"
+                    }, void 0, false, {
+                        fileName: "[project]/src/pages/PKShooter.jsx",
+                        lineNumber: 112,
+                        columnNumber: 21
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/pages/PKShooter.jsx",
+                lineNumber: 82,
+                columnNumber: 17
+            }, this),
+            gameState === 'post' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center text-white p-8 z-50",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                        className: "text-8xl font-black mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]",
+                        children: result?.won ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "text-neonGreen drop-shadow-[0_0_30px_rgba(0,255,0,0.5)]",
+                            children: "YOU WIN!"
+                        }, void 0, false, {
+                            fileName: "[project]/src/pages/PKShooter.jsx",
+                            lineNumber: 126,
+                            columnNumber: 29
+                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "text-red-500 drop-shadow-[0_0_30px_rgba(255,0,0,0.5)]",
+                            children: "YOU LOSE!"
+                        }, void 0, false, {
+                            fileName: "[project]/src/pages/PKShooter.jsx",
+                            lineNumber: 128,
+                            columnNumber: 29
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/src/pages/PKShooter.jsx",
+                        lineNumber: 124,
+                        columnNumber: 21
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: "text-4xl font-heading font-bold text-white mb-2",
+                        children: [
+                            result?.score,
+                            " / 5"
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/PKShooter.jsx",
+                        lineNumber: 131,
+                        columnNumber: 21
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: "text-xl text-gray-400 mb-12 max-w-lg text-center leading-relaxed",
+                        children: result?.won ? 'Great job! You proved yourself against Hope Solo.' : 'Looks like you need some more practice. Try again!'
+                    }, void 0, false, {
+                        fileName: "[project]/src/pages/PKShooter.jsx",
+                        lineNumber: 134,
+                        columnNumber: 21
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        onClick: startGame,
+                        className: "px-16 py-6 bg-neonBlue text-black text-2xl font-black rounded-full hover:scale-105 transition-transform shadow-[0_0_30px_rgba(0,255,255,0.5)] active:scale-95",
+                        children: "PLAY AGAIN"
+                    }, void 0, false, {
+                        fileName: "[project]/src/pages/PKShooter.jsx",
+                        lineNumber: 139,
+                        columnNumber: 21
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/pages/PKShooter.jsx",
+                lineNumber: 123,
+                columnNumber: 17
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/pages/PKShooter.jsx",
+        lineNumber: 52,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/pages/Onboarding.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>Onboarding
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Flag.jsx [app-ssr] (ecmascript)");
+;
+;
+;
+;
+;
+const CONTINENTS = [
+    {
+        name: 'Europe',
+        icon: '🏰',
+        color: 'from-blue-500/20 to-blue-900/40 border-blue-500/30'
+    },
+    {
+        name: 'South America',
+        icon: '🌎',
+        color: 'from-green-500/20 to-green-900/40 border-green-500/30'
+    },
+    {
+        name: 'Africa',
+        icon: '🌍',
+        color: 'from-orange-500/20 to-orange-900/40 border-orange-500/30'
+    },
+    {
+        name: 'Asia',
+        icon: '🏯',
+        color: 'from-red-500/20 to-red-900/40 border-red-500/30'
+    },
+    {
+        name: 'North America',
+        icon: '🗽',
+        color: 'from-indigo-500/20 to-indigo-900/40 border-indigo-500/30'
+    },
+    {
+        name: 'Oceania',
+        icon: '🏝️',
+        color: 'from-cyan-500/20 to-cyan-900/40 border-cyan-500/30'
+    }
+];
+function Onboarding() {
+    const { state, dispatch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    const [step, setStep] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(0);
+    const [selectedTeamIdx, setSelectedTeamIdx] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(-1);
+    const [selectedContinent, setSelectedContinent] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [username, setUsername] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
+    const filteredTeams = selectedContinent ? state.teams.filter((t)=>t.continent === selectedContinent) : [];
+    const selectedTeam = selectedTeamIdx >= 0 ? state.teams[selectedTeamIdx] : null;
+    const handleFinish = ()=>{
+        dispatch({
+            type: 'SET_USERNAME',
+            payload: username || 'Manager'
+        });
+        dispatch({
+            type: 'SELECT_TEAM',
+            payload: selectedTeamIdx
+        });
+        dispatch({
+            type: 'AUTO_LINEUP'
+        });
+        dispatch({
+            type: 'START_GAME'
+        });
+    };
+    const getTeamStars = (index)=>{
+        if (index < 5) return '★★★★★';
+        if (index < 15) return '★★★★☆';
+        if (index < 30) return '★★★☆☆';
+        return '★★☆☆☆';
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "min-h-screen bg-spaceBlack text-white flex flex-col items-center justify-center relative overflow-hidden",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neonBlue/10 via-spaceBlack to-spaceBlack"
+            }, void 0, false, {
+                fileName: "[project]/src/pages/Onboarding.jsx",
+                lineNumber: 44,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "absolute inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:60px_60px]"
+            }, void 0, false, {
+                fileName: "[project]/src/pages/Onboarding.jsx",
+                lineNumber: 45,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "relative z-10 w-full max-w-2xl px-8 mb-12",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex justify-between text-xs text-gray-500 mb-2 font-bold tracking-widest uppercase",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: step >= 0 ? 'text-neonGold' : '',
+                                children: "Continent"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 50,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: step >= 1 ? 'text-neonGold' : '',
+                                children: "Nation"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 51,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: step >= 2 ? 'text-neonGold' : '',
+                                children: "Identity"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 52,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: step >= 3 ? 'text-neonGold' : '',
+                                children: "Confirm"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 53,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/pages/Onboarding.jsx",
+                        lineNumber: 49,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "h-1 bg-white/10 rounded-full overflow-hidden",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                            className: "h-full bg-neonGold",
+                            animate: {
+                                width: `${(step + 1) / 4 * 100}%`
+                            }
+                        }, void 0, false, {
+                            fileName: "[project]/src/pages/Onboarding.jsx",
+                            lineNumber: 56,
+                            columnNumber: 21
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/src/pages/Onboarding.jsx",
+                        lineNumber: 55,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/pages/Onboarding.jsx",
+                lineNumber: 48,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnimatePresence"], {
+                mode: "wait",
+                children: [
+                    step === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                        initial: {
+                            opacity: 0,
+                            y: 30
+                        },
+                        animate: {
+                            opacity: 1,
+                            y: 0
+                        },
+                        exit: {
+                            opacity: 0,
+                            y: -30
+                        },
+                        className: "relative z-10 text-center max-w-4xl px-8",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                className: "text-4xl md:text-5xl font-heading font-black text-neonGold mb-3",
+                                children: "CHOOSE YOUR CONTINENT"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 64,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-gray-400 mb-10",
+                                children: "Where does your footballing journey begin?"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 65,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "grid grid-cols-2 md:grid-cols-3 gap-6 mb-10",
+                                children: CONTINENTS.map((c)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                                        whileHover: {
+                                            scale: 1.05
+                                        },
+                                        whileTap: {
+                                            scale: 0.95
+                                        },
+                                        onClick: ()=>{
+                                            setSelectedContinent(c.name);
+                                            setStep(1);
+                                            setSelectedTeamIdx(-1);
+                                        },
+                                        className: `cursor-pointer rounded-2xl p-8 border bg-gradient-to-br ${c.color} flex flex-col items-center gap-3 hover:shadow-xl transition-shadow`,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-5xl",
+                                                children: c.icon
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                                lineNumber: 75,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "font-bold text-lg",
+                                                children: c.name
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                                lineNumber: 76,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-xs text-gray-400",
+                                                children: [
+                                                    state.teams.filter((t)=>t.continent === c.name).length,
+                                                    " Nations"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                                lineNumber: 77,
+                                                columnNumber: 37
+                                            }, this)
+                                        ]
+                                    }, c.name, true, {
+                                        fileName: "[project]/src/pages/Onboarding.jsx",
+                                        lineNumber: 68,
+                                        columnNumber: 33
+                                    }, this))
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 66,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, "s0", true, {
+                        fileName: "[project]/src/pages/Onboarding.jsx",
+                        lineNumber: 63,
+                        columnNumber: 21
+                    }, this),
+                    step === 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                        initial: {
+                            opacity: 0,
+                            y: 30
+                        },
+                        animate: {
+                            opacity: 1,
+                            y: 0
+                        },
+                        exit: {
+                            opacity: 0,
+                            y: -30
+                        },
+                        className: "relative z-10 text-center max-w-3xl w-full px-8",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>setStep(0),
+                                className: "text-gray-400 hover:text-white text-sm mb-6 flex items-center gap-2 mx-auto",
+                                children: "← Back to Continents"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 87,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                className: "text-4xl font-heading font-black text-neonGold mb-3",
+                                children: "SELECT YOUR NATION"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 88,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-gray-400 mb-10",
+                                children: [
+                                    selectedContinent,
+                                    " — ",
+                                    filteredTeams.length,
+                                    " nations available"
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 89,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "grid grid-cols-1 md:grid-cols-2 gap-4 mb-10 max-h-[400px] overflow-y-auto hide-scrollbar pr-2",
+                                children: filteredTeams.map((t)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                                        whileHover: {
+                                            scale: 1.02
+                                        },
+                                        onClick: ()=>setSelectedTeamIdx(t.id),
+                                        className: `cursor-pointer rounded-xl p-5 flex items-center gap-5 border transition-all ${selectedTeamIdx === t.id ? 'border-neonGold bg-neonGold/10 shadow-[0_0_20px_rgba(255,215,0,0.15)]' : 'border-white/10 bg-white/5 hover:bg-white/10'}`,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                code: t.code,
+                                                size: "w-14 h-14"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                                lineNumber: 98,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-left flex-1",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "font-bold text-lg",
+                                                        children: t.name
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/pages/Onboarding.jsx",
+                                                        lineNumber: 100,
+                                                        columnNumber: 41
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-neonGold text-sm",
+                                                        children: getTeamStars(t.id)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/pages/Onboarding.jsx",
+                                                        lineNumber: 101,
+                                                        columnNumber: 41
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                                lineNumber: 99,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-gray-500 font-bold text-sm",
+                                                children: t.abbr
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                                lineNumber: 103,
+                                                columnNumber: 37
+                                            }, this)
+                                        ]
+                                    }, t.id, true, {
+                                        fileName: "[project]/src/pages/Onboarding.jsx",
+                                        lineNumber: 92,
+                                        columnNumber: 33
+                                    }, this))
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 90,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                disabled: selectedTeamIdx === -1,
+                                onClick: ()=>setStep(2),
+                                className: `px-12 py-4 rounded-full font-bold text-lg transition-all ${selectedTeamIdx !== -1 ? 'bg-neonGreen text-black hover:scale-105' : 'bg-gray-800 text-gray-500 cursor-not-allowed'}`,
+                                children: "NEXT →"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 107,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, "s1", true, {
+                        fileName: "[project]/src/pages/Onboarding.jsx",
+                        lineNumber: 86,
+                        columnNumber: 21
+                    }, this),
+                    step === 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                        initial: {
+                            opacity: 0,
+                            y: 30
+                        },
+                        animate: {
+                            opacity: 1,
+                            y: 0
+                        },
+                        exit: {
+                            opacity: 0,
+                            y: -30
+                        },
+                        className: "relative z-10 text-center max-w-lg w-full px-8",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>setStep(1),
+                                className: "text-gray-400 hover:text-white text-sm mb-6 flex items-center gap-2 mx-auto",
+                                children: "← Back"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 118,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                className: "text-4xl font-heading font-black text-neonGold mb-3",
+                                children: "MANAGER IDENTITY"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 119,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-gray-400 mb-10",
+                                children: "Choose a name for the global leaderboard."
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 120,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-white/5 border border-white/10 rounded-2xl p-8 mb-10",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                        type: "text",
+                                        placeholder: "Enter your manager name...",
+                                        value: username,
+                                        onChange: (e)=>setUsername(e.target.value),
+                                        maxLength: 20,
+                                        className: "w-full bg-black/60 border border-white/20 rounded-xl px-6 py-4 text-xl text-white font-bold outline-none focus:border-neonGold transition-colors text-center placeholder-gray-600"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Onboarding.jsx",
+                                        lineNumber: 122,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-xs text-gray-500 mt-3",
+                                        children: [
+                                            username.length,
+                                            "/20 characters"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/Onboarding.jsx",
+                                        lineNumber: 130,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 121,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>setStep(3),
+                                className: "px-12 py-4 rounded-full font-bold text-lg bg-neonGreen text-black hover:scale-105 transition-all",
+                                children: "NEXT →"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 132,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, "s2", true, {
+                        fileName: "[project]/src/pages/Onboarding.jsx",
+                        lineNumber: 117,
+                        columnNumber: 21
+                    }, this),
+                    step === 3 && selectedTeam && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                        initial: {
+                            opacity: 0,
+                            y: 30
+                        },
+                        animate: {
+                            opacity: 1,
+                            y: 0
+                        },
+                        exit: {
+                            opacity: 0,
+                            y: -30
+                        },
+                        className: "relative z-10 text-center max-w-2xl w-full px-8",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>setStep(2),
+                                className: "text-gray-400 hover:text-white text-sm mb-6 flex items-center gap-2 mx-auto",
+                                children: "← Back"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 142,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                className: "text-4xl font-heading font-black text-neonGold mb-3",
+                                children: "CONFIRM YOUR SQUAD"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 143,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-gray-400 mb-8",
+                                children: "Your best XI has been auto-selected."
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 144,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "bg-white/5 border border-white/10 rounded-2xl p-8 mb-8",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center justify-center gap-6 mb-6",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                code: selectedTeam.code,
+                                                size: "w-20 h-20"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                                lineNumber: 148,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-left",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-3xl font-black",
+                                                        children: selectedTeam.name
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/pages/Onboarding.jsx",
+                                                        lineNumber: 150,
+                                                        columnNumber: 37
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-gray-400",
+                                                        children: [
+                                                            "Manager: ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-neonGold font-bold",
+                                                                children: username || 'Manager'
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                                                lineNumber: 151,
+                                                                columnNumber: 77
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/pages/Onboarding.jsx",
+                                                        lineNumber: 151,
+                                                        columnNumber: 37
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                                lineNumber: 149,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/pages/Onboarding.jsx",
+                                        lineNumber: 147,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "grid grid-cols-4 gap-3",
+                                        children: [
+                                            'GK',
+                                            'DEF',
+                                            'MID',
+                                            'FWD'
+                                        ].map((pos)=>{
+                                            const players = selectedTeam.players.filter((p)=>p.position === pos).sort((a, b)=>b.strength - a.strength);
+                                            const count = pos === 'GK' ? 1 : pos === 'DEF' ? 4 : pos === 'MID' ? 4 : 2;
+                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-xs text-neonGold font-bold mb-2",
+                                                        children: pos
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/pages/Onboarding.jsx",
+                                                        lineNumber: 160,
+                                                        columnNumber: 45
+                                                    }, this),
+                                                    players.slice(0, count).map((p)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "bg-black/40 rounded-lg p-2 mb-1 text-xs",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "font-bold truncate",
+                                                                    children: p.name
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/pages/Onboarding.jsx",
+                                                                    lineNumber: 163,
+                                                                    columnNumber: 53
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "text-neonGreen font-black",
+                                                                    children: p.strength
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/pages/Onboarding.jsx",
+                                                                    lineNumber: 164,
+                                                                    columnNumber: 53
+                                                                }, this)
+                                                            ]
+                                                        }, p.id, true, {
+                                                            fileName: "[project]/src/pages/Onboarding.jsx",
+                                                            lineNumber: 162,
+                                                            columnNumber: 49
+                                                        }, this))
+                                                ]
+                                            }, pos, true, {
+                                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                                lineNumber: 159,
+                                                columnNumber: 41
+                                            }, this);
+                                        })
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/pages/Onboarding.jsx",
+                                        lineNumber: 154,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 146,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].button, {
+                                whileHover: {
+                                    scale: 1.05
+                                },
+                                whileTap: {
+                                    scale: 0.95
+                                },
+                                onClick: handleFinish,
+                                className: "px-16 py-5 rounded-full font-black text-xl bg-neonGold text-black shadow-[0_0_30px_rgba(255,215,0,0.3)] hover:shadow-[0_0_50px_rgba(255,215,0,0.5)] transition-shadow",
+                                children: "BEGIN YOUR CAREER →"
+                            }, void 0, false, {
+                                fileName: "[project]/src/pages/Onboarding.jsx",
+                                lineNumber: 173,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, "s3", true, {
+                        fileName: "[project]/src/pages/Onboarding.jsx",
+                        lineNumber: 141,
+                        columnNumber: 21
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/pages/Onboarding.jsx",
+                lineNumber: 60,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/pages/Onboarding.jsx",
+        lineNumber: 43,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/components/Toast.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>Toast
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs [app-ssr] (ecmascript)");
+;
+;
+;
+;
+function Toast() {
+    const { state, dispatch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        if (state.toasts.length > 0) {
+            const timer = setTimeout(()=>{
+                dispatch({
+                    type: 'DISMISS_TOAST',
+                    payload: state.toasts[0].id
+                });
+            }, 4000);
+            return ()=>clearTimeout(timer);
+        }
+    }, [
+        state.toasts,
+        dispatch
+    ]);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "fixed top-6 right-6 z-[200] flex flex-col gap-3 pointer-events-none",
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnimatePresence"], {
+            children: state.toasts.slice(0, 5).map((toast)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                    initial: {
+                        opacity: 0,
+                        x: 80,
+                        scale: 0.9
+                    },
+                    animate: {
+                        opacity: 1,
+                        x: 0,
+                        scale: 1
+                    },
+                    exit: {
+                        opacity: 0,
+                        x: 80,
+                        scale: 0.9
+                    },
+                    className: `pointer-events-auto px-6 py-4 rounded-xl backdrop-blur-xl border shadow-2xl font-bold text-sm max-w-sm cursor-pointer ${toast.type === 'success' ? 'bg-neonGreen/20 border-neonGreen/50 text-neonGreen' : toast.type === 'error' ? 'bg-neonRed/20 border-neonRed/50 text-neonRed' : 'bg-neonBlue/20 border-neonBlue/50 text-neonBlue'}`,
+                    onClick: ()=>dispatch({
+                            type: 'DISMISS_TOAST',
+                            payload: toast.id
+                        }),
+                    children: toast.message
+                }, toast.id, false, {
+                    fileName: "[project]/src/components/Toast.jsx",
+                    lineNumber: 21,
+                    columnNumber: 21
+                }, this))
+        }, void 0, false, {
+            fileName: "[project]/src/components/Toast.jsx",
+            lineNumber: 19,
+            columnNumber: 13
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/src/components/Toast.jsx",
+        lineNumber: 18,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/components/PostMatchStandings.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>PostMatchStandings
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Flag.jsx [app-ssr] (ecmascript)");
+;
+;
+;
+;
+function PostMatchStandings() {
+    const { state, dispatch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    if (!state.showMatchModal) return null;
+    const { playerMatch } = state.lastMatchResult || {};
+    const teams = [
+        ...state.teams
+    ].sort((a, b)=>b.stats.points - a.stats.points);
+    const isWin = playerMatch?.homeIsPlayer ? playerMatch.result.homeGoals > playerMatch.result.awayGoals : playerMatch?.result.awayGoals > playerMatch?.result.homeGoals;
+    const isDraw = playerMatch?.result.homeGoals === playerMatch?.result.awayGoals;
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] flex flex-col p-8",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                initial: {
+                    opacity: 0,
+                    y: -20
+                },
+                animate: {
+                    opacity: 1,
+                    y: 0
+                },
+                className: "text-center mb-8",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                        className: "text-4xl font-black font-heading tracking-widest text-white mb-2",
+                        children: [
+                            "ROUND ",
+                            state.round - 1,
+                            " COMPLETED"
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                        lineNumber: 27,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: "text-gray-400",
+                        children: "Leaderboard has been updated."
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                        lineNumber: 28,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                lineNumber: 22,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex flex-1 gap-8 max-w-7xl mx-auto w-full min-h-0",
+                children: [
+                    playerMatch && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "w-1/3 flex flex-col gap-6",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: `flex-1 rounded-3xl border flex flex-col items-center justify-center p-8 relative overflow-hidden ${isWin ? 'bg-neonGreen/10 border-neonGreen shadow-[0_0_50px_rgba(0,255,128,0.2)]' : isDraw ? 'bg-white/5 border-white/20' : 'bg-neonRed/10 border-neonRed shadow-[0_0_50px_rgba(255,0,0,0.2)]'}`,
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "text-2xl font-black font-heading mb-8 uppercase tracking-widest",
+                                        children: isWin ? 'VICTORY' : isDraw ? 'DRAW' : 'DEFEAT'
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 37,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex w-full items-center justify-between mb-8",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-center flex flex-col items-center",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                        code: playerMatch.homeTeam.code,
+                                                        size: "w-20 h-20",
+                                                        className: "mb-3"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                        lineNumber: 43,
+                                                        columnNumber: 37
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "font-bold",
+                                                        children: playerMatch.homeTeam.abbr
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                        lineNumber: 44,
+                                                        columnNumber: 37
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 42,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-5xl font-black font-mono",
+                                                children: [
+                                                    playerMatch.result.homeGoals,
+                                                    " - ",
+                                                    playerMatch.result.awayGoals
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 46,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-center flex flex-col items-center",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                        code: playerMatch.awayTeam.code,
+                                                        size: "w-20 h-20",
+                                                        className: "mb-3"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                        lineNumber: 50,
+                                                        columnNumber: 37
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "font-bold",
+                                                        children: playerMatch.awayTeam.abbr
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                        lineNumber: 51,
+                                                        columnNumber: 37
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 49,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 41,
+                                        columnNumber: 29
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "bg-black/50 w-full rounded-2xl p-4 text-center border border-white/10",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-xs text-gray-500 uppercase tracking-widest font-bold mb-1",
+                                                children: "Match Income"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 56,
+                                                columnNumber: 33
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "text-xl font-black text-neonGold",
+                                                children: [
+                                                    "+€",
+                                                    (playerMatch.homeIsPlayer ? 1200000 : 400000).toLocaleString()
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 57,
+                                                columnNumber: 33
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 55,
+                                        columnNumber: 29
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                lineNumber: 35,
+                                columnNumber: 25
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>dispatch({
+                                        type: 'CLOSE_MATCH_MODAL'
+                                    }),
+                                className: "w-full py-5 bg-white text-black font-black text-xl rounded-2xl hover:bg-gray-200 transition-colors shadow-xl",
+                                children: "CONTINUE TO NEXT ROUND"
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                lineNumber: 61,
+                                columnNumber: 25
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                        lineNumber: 34,
+                        columnNumber: 21
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "w-2/3 bg-black/60 border border-white/10 rounded-3xl overflow-hidden flex flex-col",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "px-8 py-4 border-b border-white/10 bg-white/5 flex text-xs font-bold text-gray-500 uppercase tracking-widest",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-16",
+                                        children: "Pos"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 73,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex-1",
+                                        children: "Nation"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 74,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-16 text-center",
+                                        children: "P"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 75,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-16 text-center",
+                                        children: "W"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 76,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-16 text-center",
+                                        children: "D"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 77,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-16 text-center",
+                                        children: "L"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 78,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-16 text-center",
+                                        children: "GD"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 79,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "w-16 text-right",
+                                        children: "Pts"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 80,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                lineNumber: 72,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                className: "flex-1 overflow-y-auto hide-scrollbar p-4 space-y-2 relative",
+                                children: teams.map((t, idx)=>{
+                                    const isPlayer = t.id === state.playerTeamIndex;
+                                    const gd = t.stats.goalsFor - t.stats.goalsAgainst;
+                                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].li, {
+                                        layout: true,
+                                        initial: {
+                                            opacity: 0,
+                                            scale: 0.9
+                                        },
+                                        animate: {
+                                            opacity: 1,
+                                            scale: 1
+                                        },
+                                        transition: {
+                                            type: "spring",
+                                            stiffness: 300,
+                                            damping: 25
+                                        },
+                                        className: `flex items-center px-4 py-3 rounded-xl border ${isPlayer ? 'bg-neonGold/20 border-neonGold shadow-[0_0_15px_rgba(255,215,0,0.2)]' : 'bg-black/40 border-white/5'}`,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: `w-12 font-bold ${idx < 4 ? 'text-neonGreen' : idx > 43 ? 'text-neonRed' : 'text-gray-400'}`,
+                                                children: idx + 1
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 96,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex-1 flex items-center gap-3",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Flag$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                                        code: t.code,
+                                                        size: "w-6 h-6"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                        lineNumber: 100,
+                                                        columnNumber: 41
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: `font-bold ${isPlayer ? 'text-neonGold' : 'text-white'}`,
+                                                        children: t.name
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                        lineNumber: 101,
+                                                        columnNumber: 41
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 99,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-16 text-center text-gray-400",
+                                                children: t.stats.played
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 103,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-16 text-center text-gray-400",
+                                                children: t.stats.won
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 104,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-16 text-center text-gray-400",
+                                                children: t.stats.drawn
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 105,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-16 text-center text-gray-400",
+                                                children: t.stats.lost
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 106,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-16 text-center text-gray-400",
+                                                children: gd > 0 ? `+${gd}` : gd
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 107,
+                                                columnNumber: 37
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-16 text-right font-black text-lg",
+                                                children: t.stats.points
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                                lineNumber: 108,
+                                                columnNumber: 37
+                                            }, this)
+                                        ]
+                                    }, t.id, true, {
+                                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                        lineNumber: 88,
+                                        columnNumber: 33
+                                    }, this);
+                                })
+                            }, void 0, false, {
+                                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                                lineNumber: 83,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/components/PostMatchStandings.jsx",
+                        lineNumber: 71,
+                        columnNumber: 17
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/components/PostMatchStandings.jsx",
+                lineNumber: 31,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/src/components/PostMatchStandings.jsx",
+        lineNumber: 21,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/App.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>App
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/render/components/motion/proxy.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/framer-motion/dist/es/components/AnimatePresence/index.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$useWeb3$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/web3/useWeb3.jsx [app-ssr] (ecmascript)");
+// Layout & Pages
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$layouts$2f$ManagerLayout$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/layouts/ManagerLayout.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$LandingPage$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/LandingPage.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$Dashboard$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/pages/Dashboard.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$Squad$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/pages/Squad.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$Matchday$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/pages/Matchday.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$Collection$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/pages/Collection.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$PKShooter$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/pages/PKShooter.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$Onboarding$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/pages/Onboarding.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Toast$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Toast.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$PostMatchStandings$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/PostMatchStandings.jsx [app-ssr] (ecmascript)");
+"use client";
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+function NftMintModal() {
+    const { state, dispatch } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    const { wallet, mintNFT } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$useWeb3$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useWeb3"])();
+    const [minting, setMinting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    if (state.pendingMints.length === 0) return null;
+    const pending = state.pendingMints[0];
+    const handleMint = async ()=>{
+        if (!wallet.connected) {
+            dispatch({
+                type: 'ADD_TOAST',
+                payload: {
+                    message: "Wallet not connected",
+                    type: "error"
+                }
+            });
+            return;
+        }
+        setMinting(true);
+        const res = await mintNFT(wallet.address, pending.type, pending.info);
+        setMinting(false);
+        if (res.success) {
+            const newBadge = {
+                type: pending.type,
+                name: 'Achievement Badge',
+                info: pending.info,
+                date: new Date().toLocaleDateString()
+            };
+            dispatch({
+                type: 'DISMISS_MINT',
+                payload: newBadge
+            });
+            dispatch({
+                type: 'ADD_TOAST',
+                payload: {
+                    message: "NFT Minted on X Layer!",
+                    type: "success"
+                }
+            });
+        } else {
+            dispatch({
+                type: 'ADD_TOAST',
+                payload: {
+                    message: "Mint Failed: " + res.error,
+                    type: "error"
+                }
+            });
+        }
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "fixed inset-0 bg-black/95 backdrop-blur-xl z-[110] flex items-center justify-center p-4",
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+            initial: {
+                y: 50,
+                opacity: 0,
+                scale: 0.9
+            },
+            animate: {
+                y: 0,
+                opacity: 1,
+                scale: 1
+            },
+            className: "text-center max-w-lg bg-white/5 border border-white/10 p-12 rounded-3xl relative overflow-hidden",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-neonGold via-white to-neonGold animate-[shimmer_2s_infinite]"
+                }, void 0, false, {
+                    fileName: "[project]/src/App.jsx",
+                    lineNumber: 51,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "text-neonGold text-8xl mb-8 drop-shadow-[0_0_30px_rgba(255,215,0,0.5)]",
+                    children: "🏆"
+                }, void 0, false, {
+                    fileName: "[project]/src/App.jsx",
+                    lineNumber: 52,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                    className: "text-4xl font-heading font-black text-white mb-4",
+                    children: "ACHIEVEMENT UNLOCKED"
+                }, void 0, false, {
+                    fileName: "[project]/src/App.jsx",
+                    lineNumber: 53,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                    className: "text-xl text-gray-400 mb-8",
+                    children: pending.info
+                }, void 0, false, {
+                    fileName: "[project]/src/App.jsx",
+                    lineNumber: 54,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "bg-black/60 rounded-2xl p-6 mb-10 border border-white/5",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "text-sm text-gray-500 mb-2 uppercase tracking-widest font-bold",
+                            children: "Exclusive Reward"
+                        }, void 0, false, {
+                            fileName: "[project]/src/App.jsx",
+                            lineNumber: 56,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "font-bold text-neonGold text-xl animate-pulse",
+                            children: "MINT ON X LAYER"
+                        }, void 0, false, {
+                            fileName: "[project]/src/App.jsx",
+                            lineNumber: 57,
+                            columnNumber: 21
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/App.jsx",
+                    lineNumber: 55,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex gap-4 justify-center",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: handleMint,
+                            disabled: minting,
+                            className: "px-10 py-4 bg-neonGold text-black font-black rounded-xl hover:scale-105 transition-transform flex-1 shadow-[0_0_20px_rgba(255,215,0,0.2)]",
+                            children: minting ? 'MINTING...' : 'CLAIM NFT NOW'
+                        }, void 0, false, {
+                            fileName: "[project]/src/App.jsx",
+                            lineNumber: 60,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: ()=>dispatch({
+                                    type: 'DISMISS_MINT',
+                                    payload: {
+                                        type: pending.type,
+                                        name: 'Skipped Badge',
+                                        info: pending.info,
+                                        date: new Date().toLocaleDateString()
+                                    }
+                                }),
+                            className: "px-8 py-4 border border-white/20 text-gray-400 hover:text-white rounded-xl transition-colors",
+                            children: "SKIP"
+                        }, void 0, false, {
+                            fileName: "[project]/src/App.jsx",
+                            lineNumber: 63,
+                            columnNumber: 21
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/App.jsx",
+                    lineNumber: 59,
+                    columnNumber: 17
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/src/App.jsx",
+            lineNumber: 50,
+            columnNumber: 13
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/src/App.jsx",
+        lineNumber: 49,
+        columnNumber: 9
+    }, this);
+}
+// --- MAIN ROUTER APP ---
+function MainApp() {
+    const { state } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useGame"])();
+    const [activeTab, setActiveTab] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('dashboard');
+    if (!state.gameStarted) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$Onboarding$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+        fileName: "[project]/src/App.jsx",
+        lineNumber: 77,
+        columnNumber: 36
+    }, this);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Toast$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                fileName: "[project]/src/App.jsx",
+                lineNumber: 81,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$PostMatchStandings$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                fileName: "[project]/src/App.jsx",
+                lineNumber: 82,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(NftMintModal, {}, void 0, false, {
+                fileName: "[project]/src/App.jsx",
+                lineNumber: 83,
+                columnNumber: 13
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$layouts$2f$ManagerLayout$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                activeTab: activeTab,
+                setActiveTab: setActiveTab,
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnimatePresence"], {
+                    mode: "wait",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                        initial: {
+                            opacity: 0,
+                            y: 10
+                        },
+                        animate: {
+                            opacity: 1,
+                            y: 0
+                        },
+                        exit: {
+                            opacity: 0,
+                            y: -10
+                        },
+                        transition: {
+                            duration: 0.2
+                        },
+                        className: "h-full",
+                        children: [
+                            activeTab === 'dashboard' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$Dashboard$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                                fileName: "[project]/src/App.jsx",
+                                lineNumber: 94,
+                                columnNumber: 55
+                            }, this),
+                            activeTab === 'squad' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$Squad$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                                fileName: "[project]/src/App.jsx",
+                                lineNumber: 95,
+                                columnNumber: 51
+                            }, this),
+                            activeTab === 'matchday' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$Matchday$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                                fileName: "[project]/src/App.jsx",
+                                lineNumber: 96,
+                                columnNumber: 54
+                            }, this),
+                            activeTab === 'collection' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$Collection$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                                fileName: "[project]/src/App.jsx",
+                                lineNumber: 97,
+                                columnNumber: 56
+                            }, this),
+                            activeTab === 'pk-shooter' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$pages$2f$PKShooter$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                                fileName: "[project]/src/App.jsx",
+                                lineNumber: 98,
+                                columnNumber: 56
+                            }, this)
+                        ]
+                    }, activeTab, true, {
+                        fileName: "[project]/src/App.jsx",
+                        lineNumber: 86,
+                        columnNumber: 21
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/src/App.jsx",
+                    lineNumber: 85,
+                    columnNumber: 17
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/src/App.jsx",
+                lineNumber: 84,
+                columnNumber: 13
+            }, this)
+        ]
+    }, void 0, true);
+}
+function App() {
+    const [entered, setEntered] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$web3$2f$useWeb3$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Web3Provider"], {
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GameProvider"], {
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$components$2f$AnimatePresence$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AnimatePresence"], {
+                mode: "wait",
+                children: !entered ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                    exit: {
+                        opacity: 0,
+                        scale: 1.05
+                    },
+                    transition: {
+                        duration: 0.5
+                    },
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$LandingPage$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                        onEnter: ()=>setEntered(true)
+                    }, void 0, false, {
+                        fileName: "[project]/src/App.jsx",
+                        lineNumber: 116,
+                        columnNumber: 29
+                    }, this)
+                }, "landing", false, {
+                    fileName: "[project]/src/App.jsx",
+                    lineNumber: 115,
+                    columnNumber: 25
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["motion"].div, {
+                    initial: {
+                        opacity: 0
+                    },
+                    animate: {
+                        opacity: 1
+                    },
+                    transition: {
+                        duration: 0.5
+                    },
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(MainApp, {}, void 0, false, {
+                        fileName: "[project]/src/App.jsx",
+                        lineNumber: 120,
+                        columnNumber: 29
+                    }, this)
+                }, "app", false, {
+                    fileName: "[project]/src/App.jsx",
+                    lineNumber: 119,
+                    columnNumber: 25
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/src/App.jsx",
+                lineNumber: 113,
+                columnNumber: 17
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/src/App.jsx",
+            lineNumber: 112,
+            columnNumber: 13
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/src/App.jsx",
+        lineNumber: 111,
+        columnNumber: 9
+    }, this);
+}
+}),
+"[project]/src/app/page.jsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>Page
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$App$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/App.jsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/GameContext.jsx [app-ssr] (ecmascript)");
+"use client";
+;
+;
+;
+;
+function Page() {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$GameContext$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["GameProvider"], {
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$App$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+            fileName: "[project]/src/app/page.jsx",
+            lineNumber: 10,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/src/app/page.jsx",
+        lineNumber: 9,
+        columnNumber: 5
+    }, this);
+}
+}),
+];
+
+//# sourceMappingURL=%5Broot-of-the-server%5D__05wn_qh._.js.map
