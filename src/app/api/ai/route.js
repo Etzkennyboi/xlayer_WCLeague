@@ -1,13 +1,12 @@
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
 
-const client = new OpenAI({
-    baseURL: 'https://integrate.api.nvidia.com/v1',
-    apiKey: process.env.NVIDIA_API_KEY
-});
-
 export async function POST(req) {
     try {
+        const client = new OpenAI({
+            baseURL: 'https://integrate.api.nvidia.com/v1',
+            apiKey: process.env.NVIDIA_API_KEY || 'dummy_key_for_build'
+        });
         const body = await req.json();
         const { action, data } = body;
 
