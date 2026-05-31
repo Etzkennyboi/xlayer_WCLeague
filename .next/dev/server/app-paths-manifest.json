@@ -1,7 +1,0 @@
-{
-  "/api/fantasy/leaderboard/route": "app/api/fantasy/leaderboard/route.js",
-  "/api/fantasy/route": "app/api/fantasy/route.js",
-  "/api/fixtures/route": "app/api/fixtures/route.js",
-  "/api/pk-payout/route": "app/api/pk-payout/route.js",
-  "/page": "app/page.js"
-}
