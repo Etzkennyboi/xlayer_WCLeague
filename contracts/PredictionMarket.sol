@@ -2,25 +2,14 @@
 pragma solidity ^0.8.19;
 
 /**
- * @title IERC20
- * @dev Basic ERC20 Interface for USDT0 transactions.
- */
-interface IERC20 {
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
-    function transfer(address recipient, uint256 amount) external returns (bool);
-    function balanceOf(address account) external view returns (uint256);
-}
-
-/**
  * @title PredictionMarket
  * @dev A fully functional Web3 Prediction Market for X-Cup. 
- * Allows users to place bets on 1X2 outcomes in USDT0 and claim winnings after the Oracle resolves the market.
+ * Allows users to place bets on 1X2 outcomes in OKB and claim winnings after the Oracle resolves the market.
  */
 contract PredictionMarket {
     
     address public owner;
     address public oracleNode; // The address authorized to resolve markets (e.g., pulling from RapidAPI)
-    IERC20 public usdt0Token;  // The USDT0 token standard
 
     // Unified MatchOutcome aligned directly with the JavaScript mapping
     enum MatchOutcome { UNRESOLVED, HOME_WIN, AWAY_WIN, DRAW }
@@ -61,16 +50,20 @@ contract PredictionMarket {
         _;
     }
 
-    constructor(address _oracleNode, address _usdt0Token) {
+    modifier onlyOwnerOrOracle() {
+        require(msg.sender == owner || msg.sender == oracleNode, "Only owner or oracle can call this");
+        _;
+    }
+
+    constructor(address _oracleNode) {
         owner = msg.sender;
         oracleNode = _oracleNode;
-        usdt0Token = IERC20(_usdt0Token);
     }
 
     /**
      * @dev Creates a new betting market for a fixture
      */
-    function createMarket(string memory _fixtureId) external onlyOwner {
+    function createMarket(string memory _fixtureId) external onlyOwnerOrOracle {
         require(bytes(markets[_fixtureId].fixtureId).length == 0, "Market already exists");
         
         markets[_fixtureId] = Market({
@@ -86,33 +79,30 @@ contract PredictionMarket {
     }
 
     /**
-     * @dev Places a bet on a specific outcome using USDT0 tokens.
+     * @dev Places a bet on a specific outcome using native OKB.
      */
-    function placeBet(string memory _fixtureId, MatchOutcome _selection, uint256 _amount) external {
-        require(_amount > 0, "Stake must be greater than 0");
+    function placeBet(string memory _fixtureId, MatchOutcome _selection) external payable {
+        require(msg.value > 0, "Stake must be greater than 0");
         require(bytes(markets[_fixtureId].fixtureId).length > 0, "Market does not exist");
         require(!markets[_fixtureId].isResolved, "Market already resolved");
         require(_selection != MatchOutcome.UNRESOLVED, "Invalid selection");
         require(bets[_fixtureId][msg.sender].amount == 0, "Already placed a bet on this market");
 
-        // Pull USDT0 tokens from user's wallet (requires pre-approval)
-        require(usdt0Token.transferFrom(msg.sender, address(this), _amount), "USDT0 transfer failed");
-
         if (_selection == MatchOutcome.HOME_WIN) {
-            markets[_fixtureId].totalHomePool += _amount;
+            markets[_fixtureId].totalHomePool += msg.value;
         } else if (_selection == MatchOutcome.AWAY_WIN) {
-            markets[_fixtureId].totalAwayPool += _amount;
+            markets[_fixtureId].totalAwayPool += msg.value;
         } else if (_selection == MatchOutcome.DRAW) {
-            markets[_fixtureId].totalDrawPool += _amount;
+            markets[_fixtureId].totalDrawPool += msg.value;
         }
 
         bets[_fixtureId][msg.sender] = Bet({
             selection: _selection,
-            amount: _amount,
+            amount: msg.value,
             claimed: false
         });
 
-        emit BetPlaced(msg.sender, _fixtureId, _selection, _amount);
+        emit BetPlaced(msg.sender, _fixtureId, _selection, msg.value);
     }
 
     /**
@@ -130,7 +120,7 @@ contract PredictionMarket {
     }
 
     /**
-     * @dev Claims USDT0 winnings for a resolved market based on pari-mutuel pool calculations.
+     * @dev Claims OKB winnings for a resolved market based on pari-mutuel pool calculations.
      */
     function claimWinnings(string memory _fixtureId) external {
         require(markets[_fixtureId].isResolved, "Market not yet resolved");
@@ -158,9 +148,25 @@ contract PredictionMarket {
         uint256 platformFee = (grossPayout * 2) / 100;
         uint256 netPayout = grossPayout - platformFee;
 
-        // Disburse USDT0 winnings securely to user
-        require(usdt0Token.transfer(msg.sender, netPayout), "USDT0 transfer failed");
+        // Disburse OKB winnings securely to user
+        (bool success, ) = payable(msg.sender).call{value: netPayout}("");
+        require(success, "OKB transfer failed");
 
         emit WinningsClaimed(msg.sender, _fixtureId, netPayout);
+    }
+
+    /**
+     * @dev Returns full details for a market, including the string fixtureId.
+     */
+    function getMarket(string memory _fixtureId) external view returns (
+        string memory fixtureId,
+        MatchOutcome outcome,
+        bool isResolved,
+        uint256 totalHomePool,
+        uint256 totalDrawPool,
+        uint256 totalAwayPool
+    ) {
+        Market memory m = markets[_fixtureId];
+        return (m.fixtureId, m.outcome, m.isResolved, m.totalHomePool, m.totalDrawPool, m.totalAwayPool);
     }
 }

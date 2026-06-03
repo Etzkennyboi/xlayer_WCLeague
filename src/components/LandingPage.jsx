@@ -1,12 +1,15 @@
-
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useWeb3 } from '../web3/useWeb3';
 
 export default function LandingPage({ onEnter }) {
     const { connectWallet } = useWeb3();
+    const [isConnecting, setIsConnecting] = useState(false);
 
     const handleConnect = async () => {
+        setIsConnecting(true);
         const res = await connectWallet();
+        setIsConnecting(false);
         if (res.success) {
             onEnter();
         } else {
@@ -32,7 +35,7 @@ export default function LandingPage({ onEnter }) {
             >
                 <div className="flex gap-8">
                     <span><span className="text-neonGreen">●</span> LIVE ON X LAYER</span>
-                    <span>TVL: <strong className="text-white">$1.2M USDT0</strong></span>
+                    <span>TVL: <strong className="text-white">$1.2M OKB</strong></span>
                     <span>MATCHES: <strong className="text-white">15,420</strong></span>
                 </div>
                 <div>X Cup Global League v2.0</div>
@@ -66,22 +69,24 @@ export default function LandingPage({ onEnter }) {
                 >
                     <button 
                         onClick={handleConnect}
-                        className="group relative px-8 py-4 bg-neonGold text-black font-heading font-bold text-xl rounded-full overflow-hidden transition-transform hover:scale-105"
+                        disabled={isConnecting}
+                        className="group relative px-8 py-4 bg-neonGold text-black font-heading font-bold text-xl rounded-full overflow-hidden transition-transform hover:scale-105 disabled:opacity-75 disabled:scale-100 shadow-[0_0_20px_rgba(255,215,0,0.3)] disabled:shadow-none"
                     >
                         <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                         <span className="relative flex items-center gap-2">
-                            CONNECT WALLET TO ENTER
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            {isConnecting ? (
+                                <>
+                                    <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                                    CONNECTING...
+                                </>
+                            ) : (
+                                <>
+                                    CONNECT WALLET TO ENTER
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                </>
+                            )}
                         </span>
                     </button>
-                    
-                    <button 
-                        onClick={onEnter}
-                        className="mt-6 block mx-auto px-6 py-2 border border-white/20 text-gray-400 rounded-full hover:text-white hover:border-white transition-colors"
-                    >
-                        Enter Demo Mode
-                    </button>
-                    <p className="mt-4 text-xs text-gray-600">No crypto required to play demo mode.</p>
                 </motion.div>
             </div>
         </div>

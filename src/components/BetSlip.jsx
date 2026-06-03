@@ -1,13 +1,41 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 import { useGame } from '../context/GameContext';
+import { useWeb3 } from '../web3/useWeb3';
 
 export default function BetSlip() {
     const { state, dispatch } = useGame();
-    const { betSlip, budget } = state;
+    const { betSlip } = state;
+    const { wallet, sendBetToTreasury } = useWeb3();
+    const [isProcessing, setIsProcessing] = useState(false);
 
-    const totalStake = betSlip.reduce((sum, b) => sum + b.amount, 0);
-    const totalPotential = betSlip.reduce((sum, b) => sum + (b.amount * parseFloat(b.odds)), 0);
-    const canConfirm = betSlip.length > 0 && totalStake <= budget;
+    const totalStake = betSlip.reduce((sum, b) => sum + (b.amount || 0.01), 0);
+    const totalPotential = betSlip.reduce((sum, b) => sum + ((b.amount || 0.01) * parseFloat(b.odds)), 0);
+    const canConfirm = betSlip.length > 0 && wallet?.connected && !isProcessing;
+
+    const handleConfirm = async () => {
+        if (!wallet?.connected) {
+            alert("Please connect wallet first.");
+            return;
+        }
+
+        setIsProcessing(true);
+        try {
+            const txResult = await sendBetToTreasury(totalStake);
+            if (txResult.success) {
+                dispatch({ 
+                    type: 'CONFIRM_WEB3_SLIP', 
+                    payload: { txHash: txResult.txHash, totalCost: totalStake } 
+                });
+            } else {
+                alert("Transaction failed or rejected.");
+            }
+        } catch (e) {
+            console.error("Bet slip confirmation error:", e);
+            alert("Transaction error.");
+        }
+        setIsProcessing(false);
+    };
 
     if (betSlip.length === 0) {
         return (
@@ -27,7 +55,9 @@ export default function BetSlip() {
 
             <div className="p-4 space-y-3 max-h-[300px] overflow-y-auto hide-scrollbar">
                 <AnimatePresence>
-                    {betSlip.map(bet => (
+                    {betSlip.map(bet => {
+                        const betAmount = bet.amount || 0.01;
+                        return (
                         <motion.div
                             key={bet.matchId}
                             initial={{ opacity: 0, height: 0 }}
@@ -49,39 +79,39 @@ export default function BetSlip() {
                                 >×</button>
                             </div>
                             <div className="flex gap-2">
-                                {[1000, 5000, 10000, 50000].map(amt => (
+                                {[0.01, 0.05, 0.1, 0.5].map(amt => (
                                     <button
                                         key={amt}
                                         onClick={() => dispatch({ type: 'UPDATE_SLIP_AMOUNT', payload: { matchId: bet.matchId, amount: amt } })}
-                                        className={`flex-1 text-xs py-1.5 rounded-lg border transition-colors ${bet.amount === amt ? 'bg-neonGold/20 border-neonGold/50 text-neonGold' : 'border-white/10 text-gray-400 hover:border-white/30'}`}
+                                        className={`flex-1 text-xs py-1.5 rounded-lg border transition-colors ${betAmount === amt ? 'bg-neonGold/20 border-neonGold/50 text-neonGold' : 'border-white/10 text-gray-400 hover:border-white/30'}`}
                                     >
-                                        {amt >= 1000 ? `${amt/1000}K` : amt}
+                                        {amt} OKB
                                     </button>
                                 ))}
                             </div>
                         </motion.div>
-                    ))}
+                    )})}
                 </AnimatePresence>
             </div>
 
             <div className="p-4 border-t border-white/10 space-y-3">
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Total Stake</span>
-                    <span className={`font-bold ${totalStake > budget ? 'text-neonRed' : 'text-white'}`}>€{totalStake.toLocaleString()}</span>
+                    <span className="font-bold text-white">{totalStake.toFixed(2)} OKB</span>
                 </div>
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Potential Return</span>
-                    <span className="font-bold text-neonGreen">€{Math.floor(totalPotential).toLocaleString()}</span>
+                    <span className="font-bold text-neonGreen">{totalPotential.toFixed(2)} OKB</span>
                 </div>
-                {totalStake > budget && (
-                    <div className="text-xs text-neonRed text-center">Insufficient funds</div>
+                {!wallet?.connected && (
+                    <div className="text-xs text-neonRed text-center">Connect wallet to bet</div>
                 )}
                 <button
-                    onClick={() => dispatch({ type: 'CONFIRM_SLIP' })}
+                    onClick={handleConfirm}
                     disabled={!canConfirm}
-                    className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${canConfirm ? 'bg-neonGreen text-black hover:scale-[1.02]' : 'bg-gray-800 text-gray-500 cursor-not-allowed'}`}
+                    className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${canConfirm ? 'bg-neonGreen text-black hover:scale-[1.02]' : 'bg-gray-800 text-gray-500 cursor-not-allowed'} ${isProcessing ? 'animate-pulse' : ''}`}
                 >
-                    CONFIRM BETS
+                    {isProcessing ? 'PROCESSING...' : 'CONFIRM BETS'}
                 </button>
             </div>
         </div>

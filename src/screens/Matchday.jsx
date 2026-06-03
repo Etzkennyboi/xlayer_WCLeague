@@ -12,12 +12,6 @@ export default function Matchday() {
 
     const currentRoundIdx = state.round - 1;
     const fixtures = state.fixtures[currentRoundIdx] || [];
-    const [realFixtures, setRealFixtures] = useState([]);
-    
-    useEffect(() => {
-        fetch('/api/fixtures').then(r => r.json()).then(setRealFixtures).catch(console.error);
-    }, []);
-    
     // Find player's match
     const playerMatch = fixtures.find(f => f.home === state.playerTeamIndex || f.away === state.playerTeamIndex);
     
@@ -220,11 +214,7 @@ export default function Matchday() {
                                 <span className="text-xs text-white font-bold bg-black/60 px-3 py-1 rounded border border-white/5 shadow-inner">LIVE</span>
                             </div>
                             <div className="p-2">
-                                {realFixtures.length > 0 ? (
-                                    realFixtures.map(f => renderFixtureRow(f, true))
-                                ) : (
-                                    bangerFixtures.map(f => renderFixtureRow(f, false))
-                                )}
+                                {bangerFixtures.map(f => renderFixtureRow(f, false))}
                             </div>
                         </div>
                     </div>

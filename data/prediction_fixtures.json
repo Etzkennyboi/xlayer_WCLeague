@@ -1,0 +1,62 @@
+[
+  {
+    "id": "wc-2026-m1",
+    "homeTeam": "Mexico",
+    "homeCode": "MX",
+    "awayTeam": "South Africa",
+    "awayCode": "ZA",
+    "odds": { "home": "1.75", "draw": "3.50", "away": "4.20" },
+    "status": "upcoming",
+    "result": null
+  },
+  {
+    "id": "wc-2026-m2",
+    "homeTeam": "South Korea",
+    "homeCode": "KR",
+    "awayTeam": "Czechia",
+    "awayCode": "CZ",
+    "odds": { "home": "2.10", "draw": "3.20", "away": "3.10" },
+    "status": "upcoming",
+    "result": null
+  },
+  {
+    "id": "wc-2026-m3",
+    "homeTeam": "Canada",
+    "homeCode": "CA",
+    "awayTeam": "Bosnia and Herzegovina",
+    "awayCode": "BA",
+    "odds": { "home": "1.90", "draw": "3.30", "away": "3.60" },
+    "status": "upcoming",
+    "result": null
+  },
+  {
+    "id": "wc-2026-m4",
+    "homeTeam": "United States",
+    "homeCode": "US",
+    "awayTeam": "Paraguay",
+    "awayCode": "PY",
+    "odds": { "home": "1.65", "draw": "3.60", "away": "4.80" },
+    "status": "upcoming",
+    "result": null
+  },
+  {
+    "id": "wc-2026-m5",
+    "homeTeam": "Haiti",
+    "homeCode": "HT",
+    "awayTeam": "Scotland",
+    "awayCode": "GB-SCT",
+    "odds": { "home": "3.80", "draw": "3.40", "away": "1.85" },
+    "status": "upcoming",
+    "result": null
+  },
+  {
+    "id": "wc-2026-m6",
+    "homeTeam": "Netherlands",
+    "homeCode": "NL",
+    "awayTeam": "Japan",
+    "awayCode": "JP",
+    "odds": { "home": "2.05", "draw": "3.25", "away": "3.20" },
+    "status": "upcoming",
+    "result": null
+  }
+]

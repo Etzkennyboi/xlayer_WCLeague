@@ -46,9 +46,9 @@ function generateMarkets(fixtures, playerTeamIndex, roundIndex, teams) {
             awayIdx: f.away,
             round: roundIndex,
             resolved: false,
-            odds1: Math.max(1.1, (1 / (homeProb * 0.85 + 0.05) + (Math.random() * 0.3 - 0.15))).toFixed(2),
-            oddsX: Math.max(2.5, (1 / drawProb + (Math.random() * 0.5 - 0.25))).toFixed(2),
-            odds2: Math.max(1.1, (1 / (awayProb * 0.85 + 0.05) + (Math.random() * 0.3 - 0.15))).toFixed(2),
+            odds1: "2.00",
+            oddsX: "2.00",
+            odds2: "2.00",
         };
     });
 }
@@ -112,10 +112,10 @@ function gameReducer(state, action) {
             const exists = state.betSlip.find(b => b.matchId === action.payload.matchId);
             if (exists) {
                 return { ...state, betSlip: state.betSlip.map(b =>
-                    b.matchId === action.payload.matchId ? action.payload : b
+                    b.matchId === action.payload.matchId ? { ...action.payload, amount: b.amount || 0.01 } : b
                 )};
             }
-            return { ...state, betSlip: [...state.betSlip, { ...action.payload, amount: 1000 }] };
+            return { ...state, betSlip: [...state.betSlip, { ...action.payload, amount: 0.01 }] };
         }
         case 'REMOVE_FROM_SLIP':
             return { ...state, betSlip: state.betSlip.filter(b => b.matchId !== action.payload) };
@@ -125,26 +125,30 @@ function gameReducer(state, action) {
             )};
         case 'CLEAR_SLIP':
             return { ...state, betSlip: [] };
-        case 'CONFIRM_SLIP': {
-            const totalCost = state.betSlip.reduce((sum, b) => sum + b.amount, 0);
-            if (totalCost > state.budget || state.betSlip.length === 0) return state;
+        case 'CONFIRM_WEB3_SLIP': {
+            const { txHash, totalCost } = action.payload;
             const newBets = state.betSlip.map(b => ({
                 id: `${b.matchId}-${b.selection}-${Date.now()}-${Math.random()}`,
                 marketId: b.matchId,
                 selection: b.selection,
-                amount: b.amount,
+                amount: b.amount || 0.01,
                 odds: b.odds,
                 round: state.round - 1,
-                resolved: false
+                resolved: false,
+                txHash
             }));
             return {
                 ...state,
-                budget: state.budget - totalCost,
                 activeBets: [...state.activeBets, ...newBets],
                 betSlip: [],
-                toasts: [...state.toasts, { id: Date.now(), message: `Bets placed! €${totalCost.toLocaleString()} wagered on ${newBets.length} match(es).`, type: 'success' }]
+                toasts: [...state.toasts, { id: Date.now(), message: `Bets placed! ${totalCost.toFixed(2)} OKB wagered.`, type: 'success' }]
             };
         }
+
+        case 'PROCESS_PENDING_PAYOUT':
+            return { ...state, pendingPayout: action.payload };
+        case 'CLEAR_PENDING_PAYOUT':
+            return { ...state, pendingPayout: null };
 
         // ─── MATCHDAY LIVE SIMULATION ───
         case 'START_LIVE_SIM': {
@@ -286,13 +290,13 @@ function gameReducer(state, action) {
                                 won = bet.isYes === homeWin;
                             }
                             if (won) {
-                                const payout = bet.amount * parseFloat(bet.odds || bet.multiplier);
+                                const payout = bet.amount * 2;
                                 roundWinnings += payout;
                                 newOracleStreak++;
-                                newToasts.push({ id: Date.now() + Math.floor(Math.random() * 1000), message: `🎯 Won €${Math.floor(payout).toLocaleString()}!`, type: 'success' });
+                                newToasts.push({ id: Date.now() + Math.floor(Math.random() * 1000), message: `🎯 Won ${payout.toFixed(2)} OKB!`, type: 'success' });
                             } else {
                                 newOracleStreak = 0;
-                                newToasts.push({ id: Date.now() + Math.floor(Math.random() * 1000), message: `❌ Lost €${bet.amount.toLocaleString()}`, type: 'error' });
+                                newToasts.push({ id: Date.now() + Math.floor(Math.random() * 1000), message: `❌ Lost ${bet.amount.toFixed(2)} OKB`, type: 'error' });
                             }
                             return { ...bet, resolved: true, won };
                         }
@@ -301,7 +305,7 @@ function gameReducer(state, action) {
                 return bet;
             });
 
-            const newBudget = state.budget + matchIncome + roundWinnings;
+            const newBudget = state.budget; // Legacy budget no longer used for bets
 
             // 3. NFT Triggers
             let newWinStreak = state.winStreak;
@@ -360,6 +364,7 @@ function gameReducer(state, action) {
                 winStreak: newWinStreak,
                 oracleStreak: newOracleStreak,
                 pendingMints: newPendingMints,
+                pendingPayout: roundWinnings > 0 ? roundWinnings : null,
                 showMatchModal: true, // Now used to show PostMatchStandings
                 liveSim: { ...state.liveSim, active: false }, // Reset liveSim
                 lastMatchResult: { playerMatch: playerMatchResult, allResults },
@@ -386,10 +391,9 @@ function gameReducer(state, action) {
         case 'DISMISS_MINT':
             return {
                 ...state,
-                budget: state.budget + 500000,
                 pendingMints: state.pendingMints.filter((_, i) => i !== 0),
                 nftBadges: [...state.nftBadges, action.payload],
-                toasts: [...state.toasts, { id: Date.now(), message: 'Badge Collected! €500,000 demo funds added.', type: 'success' }]
+                toasts: [...state.toasts, { id: Date.now(), message: 'Badge Collected!', type: 'success' }]
             };
 
         case 'PK_GAME_END': {
@@ -512,8 +516,50 @@ export function GameProvider({ children }) {
     return (
         <GameContext.Provider value={{ state, dispatch }}>
             {children}
+            <PayoutProcessor state={state} dispatch={dispatch} />
         </GameContext.Provider>
     );
+}
+
+// A hidden component to process backend payouts natively without breaking the pure reducer logic
+function PayoutProcessor({ state, dispatch }) {
+    const { pendingPayout } = state;
+    
+    useEffect(() => {
+        if (pendingPayout > 0) {
+            const processPayout = async () => {
+                try {
+                    // Assuming wallet context is somewhat available or we grab it globally
+                    // To avoid hook issues, we can just fetch the userAddress if we have it in state
+                    // Wait, GameContext doesn't track userAddress. Let's get it from window.ethereum
+                    let userAddress = null;
+                    if (window.ethereum) {
+                        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                        userAddress = accounts[0];
+                    }
+                    
+                    if (userAddress) {
+                        const res = await fetch('/api/local-payout', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userAddress, payoutAmount: pendingPayout })
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            dispatch({ type: 'ADD_TOAST', payload: { message: `Payout of ${pendingPayout.toFixed(2)} OKB sent!`, type: 'success' } });
+                        }
+                    }
+                } catch (e) {
+                    console.error("Payout error", e);
+                } finally {
+                    dispatch({ type: 'CLEAR_PENDING_PAYOUT' });
+                }
+            };
+            processPayout();
+        }
+    }, [pendingPayout, dispatch]);
+
+    return null;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

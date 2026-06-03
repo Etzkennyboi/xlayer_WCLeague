@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useGame } from '../context/GameContext';
 import { useWeb3 } from '../web3/useWeb3';
+import { CONFIG } from '../web3/config';
 import Flag from '../components/Flag';
 
 const NAV_ITEMS = [
@@ -13,7 +14,7 @@ const NAV_ITEMS = [
 
 export default function ManagerLayout({ children, activeTab, setActiveTab }) {
     const { state } = useGame();
-    const { wallet, connectWallet } = useWeb3();
+    const { wallet, connectWallet, switchNetwork, disconnectWallet } = useWeb3();
 
     const team = state.teams[state.playerTeamIndex];
     
@@ -81,16 +82,10 @@ export default function ManagerLayout({ children, activeTab, setActiveTab }) {
                 {/* Global Top Bar */}
                 <header className="h-20 border-b border-white/5 glass-panel-heavy flex items-center justify-between px-4 md:px-8 z-20">
                     <div className="flex items-center gap-6">
-                        {/* Demo Budget */}
-                        <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest drop-shadow">Demo Budget</span>
-                            <span className="font-black text-neonGreen text-xl drop-shadow-md">€{(state.budget / 1000000).toFixed(2)}M</span>
-                        </div>
-                        <div className="w-px h-8 bg-white/10"></div>
-                        {/* Real USDT0 Balance */}
+                        {/* OKB Balance */}
                         <div className="flex flex-col">
                             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1 drop-shadow">
-                                USDT0 Balance <span className="w-1.5 h-1.5 rounded-full bg-neonBlue animate-pulse drop-shadow-[0_0_5px_cyan]"></span>
+                                OKB Balance <span className="w-1.5 h-1.5 rounded-full bg-neonBlue animate-pulse drop-shadow-[0_0_5px_cyan]"></span>
                             </span>
                             <span className="font-black text-white text-xl drop-shadow-md">{wallet.connected ? parseFloat(wallet.balance).toFixed(2) : '0.00'}</span>
                         </div>
@@ -98,10 +93,30 @@ export default function ManagerLayout({ children, activeTab, setActiveTab }) {
                     
                     <div>
                         {wallet.connected ? (
-                            <div className="flex items-center gap-3 bg-neonBlue/10 border border-neonBlue/30 px-4 py-2 rounded-full glass-panel">
-                                <div className="w-2 h-2 rounded-full bg-neonBlue shadow-[0_0_8px_cyan]"></div>
-                                <span className="font-mono text-sm text-neonBlue drop-shadow-md">{wallet.address.slice(0,6)}...{wallet.address.slice(-4)}</span>
-                            </div>
+                            wallet.chainId !== CONFIG.XLAYER_MAINNET_ID ? (
+                                <button 
+                                    onClick={switchNetwork}
+                                    className="bg-red-500/20 hover:bg-red-500/40 border border-red-500/50 text-red-400 font-bold px-4 md:px-6 py-2 rounded-full transition-all shadow-[0_0_15px_rgba(239,68,68,0.2)] text-xs md:text-sm uppercase tracking-wider animate-pulse"
+                                >
+                                    ⚠️ Switch Network
+                                </button>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-3 bg-neonBlue/10 border border-neonBlue/30 px-4 py-2 rounded-full glass-panel">
+                                        <div className="w-2 h-2 rounded-full bg-neonBlue shadow-[0_0_8px_cyan]"></div>
+                                        <span className="font-mono text-sm text-neonBlue drop-shadow-md">{wallet.address.slice(0,6)}...{wallet.address.slice(-4)}</span>
+                                    </div>
+                                    <button 
+                                        onClick={disconnectWallet}
+                                        className="bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/30 text-gray-400 hover:text-red-400 p-2.5 rounded-full transition-all shadow-md flex items-center justify-center"
+                                        title="Disconnect Wallet"
+                                    >
+                                        <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            )
                         ) : (
                             <button 
                                 onClick={connectWallet}

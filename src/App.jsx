@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { GameProvider, useGame } from './context/GameContext';
@@ -113,24 +113,57 @@ function MainApp() {
 }
 
 // --- ROOT WRAPPER ---
-export default function App() {
+function RootApp() {
+    const { wallet } = useWeb3();
     const [entered, setEntered] = useState(false);
 
+    useEffect(() => {
+        if (wallet.connected) {
+            setEntered(true);
+        } else if (!wallet.loading) {
+            setEntered(false);
+        }
+    }, [wallet.connected, wallet.loading]);
+
+    if (wallet.loading) {
+        return (
+            <div className="min-h-screen bg-spaceBlack flex flex-col items-center justify-center text-white font-heading relative overflow-hidden">
+                {/* Background pitch aesthetics */}
+                <div className="absolute inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none"></div>
+                <div className="absolute top-0 inset-x-0 h-96 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neonGold/10 via-spaceBlack/50 to-transparent pointer-events-none"></div>
+                
+                <div className="relative z-10 flex flex-col items-center gap-6">
+                    <div className="w-16 h-16 border-4 border-neonGold border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(255,215,0,0.3)]"></div>
+                    <div className="text-center">
+                        <span className="text-neonGold uppercase tracking-widest text-lg font-black block mb-1" style={{ textShadow: '0 0 15px rgba(255,215,0,0.5)' }}>CONNECTING PITCH</span>
+                        <span className="text-gray-500 text-xs font-bold uppercase tracking-widest">Verifying Web3 Session...</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <GameProvider>
+            <AnimatePresence mode="wait">
+                {!entered ? (
+                    <motion.div key="landing" exit={{ opacity: 0, scale: 1.05 }} transition={{ duration: 0.5 }}>
+                        <LandingPage onEnter={() => setEntered(true)} />
+                    </motion.div>
+                ) : (
+                    <motion.div key="app" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+                        <MainApp />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </GameProvider>
+    );
+}
+
+export default function App() {
     return (
         <Web3Provider>
-            <GameProvider>
-                <AnimatePresence mode="wait">
-                    {!entered ? (
-                        <motion.div key="landing" exit={{ opacity: 0, scale: 1.05 }} transition={{ duration: 0.5 }}>
-                            <LandingPage onEnter={() => setEntered(true)} />
-                        </motion.div>
-                    ) : (
-                        <motion.div key="app" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-                            <MainApp />
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </GameProvider>
+            <RootApp />
         </Web3Provider>
     );
 }

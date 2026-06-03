@@ -28,7 +28,7 @@ export default function PKShooter() {
     const canvasRef = useRef(null);
     const engineRef = useRef(null);
     const { dispatch } = useGame();
-    const { wallet, connectWallet } = useWeb3();
+    const { wallet, connectWallet, sendBetToTreasury } = useWeb3();
 
     const [gameState, setGameState] = useState('pre'); // pre, playing, post
     const [result, setResult] = useState(null);
@@ -40,6 +40,15 @@ export default function PKShooter() {
     const [txHash, setTxHash] = useState('');
     const [commentary, setCommentary] = useState('');
     const [isFetchingPrediction, setIsFetchingPrediction] = useState(false);
+    const [betAmountOkb, setBetAmountOkb] = useState('0'); // Minimum bet in OKB
+    const [betTxHash, setBetTxHash] = useState(null);
+
+    // Custom Staking Modal states
+    const [showStakeModal, setShowStakeModal] = useState(false);
+    const [inputBetAmount, setInputBetAmount] = useState('0');
+    const [minBetAmount, setMinBetAmount] = useState('0');
+    const [isConfirmingBet, setIsConfirmingBet] = useState(false);
+    const [currentOkbPrice, setCurrentOkbPrice] = useState(84.0);
 
     // Track user's shot directions for the adaptive AI
     const shotHistoryRef = useRef([]);
@@ -96,10 +105,17 @@ export default function PKShooter() {
                     localStorage.setItem(localCooldownKey, Date.now().toString());
                 }
 
-                payoutPromise = fetch('/api/pk-payout', {
+                payoutPromise = fetch('/api/pk-play', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'payout', userAddress: wallet?.address })
+                    body: JSON.stringify({ 
+                        action: 'payout', 
+                        userAddress: wallet?.address,
+                        betAmount: betAmountOkb,
+                        txHash: betTxHash,
+                        score: gameResult.score,
+                        won: gameResult.won
+                    })
                 }).then(r => r.json());
             }
 
@@ -108,8 +124,8 @@ export default function PKShooter() {
                 if (aiRes.commentary) setCommentary(aiRes.commentary);
                 
                 if (gameResult.won) {
-                    if (payoutRes.success) {
-                        setTxHash(payoutRes.txHash);
+                    if (payoutRes.success && payoutRes.payoutTxHash) {
+                        setTxHash(payoutRes.payoutTxHash);
                         setPayoutStatus('done');
                     } else {
                         setPayoutStatus('error');
@@ -126,7 +142,7 @@ export default function PKShooter() {
         } else {
             setGameState('post');
         }
-    }, [dispatch, mode, wallet?.address]);
+    }, [dispatch, mode, wallet?.address, betAmountOkb, betTxHash]);
 
     const handleScoreboard = useCallback((scores) => {
         setScoreboard(scores);
@@ -164,15 +180,59 @@ export default function PKShooter() {
         };
     }, [handleGameEnd, handleScoreboard, fetchDivePrediction]);
 
+    const handlePlaceBetAndPlay = async () => {
+        if (parseFloat(inputBetAmount) < parseFloat(minBetAmount)) {
+            alert(`Minimum bet is ${minBetAmount} OKB ($1 equivalent)`);
+            return;
+        }
+        if (parseFloat(inputBetAmount) > parseFloat(wallet.balance)) {
+            alert("Insufficient wallet balance");
+            return;
+        }
+        
+        setIsConfirmingBet(true);
+        try {
+            const txResult = await sendBetToTreasury(inputBetAmount);
+            if (txResult.success) {
+                setBetTxHash(txResult.txHash);
+                setBetAmountOkb(inputBetAmount);
+                setShowStakeModal(false);
+                
+                // Start shootout
+                shotHistoryRef.current = [];
+                setGameState('playing');
+                setResult(null);
+                setScoreboard([]);
+                setTxHash('');
+                setCooldownLeft(null);
+                if (engineRef.current) {
+                    engineRef.current.start();
+                    // Fetch prediction for the very first shot based on empty history
+                    fetchDivePrediction([]);
+                }
+            } else {
+                alert("Transaction failed or was rejected. Cannot start shootout.");
+            }
+        } catch (e) {
+            console.error("Failed to send transaction", e);
+            alert("Transaction failed: " + (e.message || String(e)));
+        } finally {
+            setIsConfirmingBet(false);
+        }
+    };
+
     const startGame = async () => {
         if (mode === 'real') {
+            let activeAddress = wallet?.address;
+
             if (!wallet?.connected) {
-                await connectWallet();
-                if (!wallet?.connected) return; // Still not connected
+                const res = await connectWallet();
+                if (!res.success || !res.address) return; // Connection failed or rejected
+                activeAddress = res.address;
             }
             
             // Check local storage cooldown first (secondary DB protection)
-            const localCooldownKey = `pk_cooldown_${wallet.address.toLowerCase()}`;
+            const localCooldownKey = `pk_cooldown_${activeAddress.toLowerCase()}`;
             const localLastPlay = localStorage.getItem(localCooldownKey);
             const now = Date.now();
             const COOLDOWN_MS = 24 * 60 * 60 * 1000;
@@ -186,23 +246,24 @@ export default function PKShooter() {
                 }
             }
             
-            // Check cooldown on backend
+            // Fetch OKB price to calculate min bet ($1)
+            let price = 84.0;
             try {
-                const res = await fetch('/api/pk-payout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'check', userAddress: wallet.address })
-                });
+                const res = await fetch('/api/okb-price');
                 const data = await res.json();
-                if (data.cooldownActive) {
-                    setCooldownLeft(data.timeLeftSeconds);
-                    // Sync localstorage with backend remaining cooldown
-                    localStorage.setItem(localCooldownKey, (Date.now() - (COOLDOWN_MS - data.timeLeftSeconds * 1000)).toString());
-                    return;
+                if (data.success) {
+                    price = data.price;
                 }
             } catch (err) {
-                console.error(err);
+                console.error("Failed to fetch OKB price", err);
             }
+
+            setCurrentOkbPrice(price);
+            const minBet = (1 / price).toFixed(4);
+            setMinBetAmount(minBet);
+            setInputBetAmount(minBet);
+            setShowStakeModal(true);
+            return; // Modal is now open, wait for user input
         }
 
         shotHistoryRef.current = [];
@@ -214,8 +275,6 @@ export default function PKShooter() {
 
         if (engineRef.current) {
             engineRef.current.start();
-            // Fetch prediction for the very first shot based on empty history
-            if (mode === 'real') fetchDivePrediction([]);
         }
     };
 
@@ -275,7 +334,7 @@ export default function PKShooter() {
                             className={`px-8 py-3 rounded-full font-bold transition-colors z-10 flex items-center gap-2 ${mode === 'real' ? 'text-black bg-neonGreen shadow-[0_0_20px_rgba(0,255,0,0.4)]' : 'text-gray-400 hover:text-white'}`}
                         >
                             Real Stakes
-                            <span className="bg-black/20 text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider">Win 1 USDT</span>
+                            <span className="bg-black/20 text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider">Win 2x OKB</span>
                         </button>
                     </div>
 
@@ -283,7 +342,7 @@ export default function PKShooter() {
                         {mode === 'real' ? (
                             <p className="text-lg text-gray-300 mb-4 leading-relaxed">
                                 Face off against an <span className="text-neonGreen font-bold">Adaptive AI</span> that learns your shots.<br/>
-                                Score <span className="text-neonGreen font-bold">3+ out of 5</span> to win 1 USDT.<br/>
+                                Score <span className="text-neonGreen font-bold">3+ out of 5</span> to win 2x your OKB bet!<br/>
                                 <span className="text-xs text-gray-400 italic">One attempt per 24 hours.</span>
                             </p>
                         ) : (
@@ -374,6 +433,84 @@ export default function PKShooter() {
                     >
                         BACK TO MENU
                     </button>
+                </div>
+            )}
+
+            {/* Custom Staking Modal Overlay */}
+            {showStakeModal && (
+                <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-6 z-[60]">
+                    <div className="bg-white/5 border-2 border-neonGreen/30 rounded-3xl p-8 max-w-md w-full relative overflow-hidden shadow-[0_0_30px_rgba(0,255,0,0.15)] animate-in fade-in zoom-in duration-300">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-neonGreen"></div>
+                        <h3 className="text-3xl font-heading font-black text-neonGreen mb-2 uppercase tracking-widest text-center" style={{ textShadow: '0 0 15px rgba(0,255,0,0.3)' }}>PLACE STAKE</h3>
+                        <p className="text-sm text-gray-400 text-center uppercase tracking-widest font-bold mb-6">Real Stakes Shootout</p>
+                        
+                        <div className="space-y-6">
+                            {/* Bet Input */}
+                            <div className="bg-black/55 p-5 rounded-2xl border border-white/5">
+                                <div className="flex justify-between items-center mb-2 text-xs font-bold text-gray-500 uppercase tracking-widest">
+                                    <span>Bet Amount</span>
+                                    <span>Balance: {parseFloat(wallet.balance).toFixed(4)} OKB</span>
+                                </div>
+                                <div className="relative">
+                                    <input 
+                                        type="number" 
+                                        min={minBetAmount} 
+                                        step="0.01"
+                                        value={inputBetAmount}
+                                        onChange={(e) => setInputBetAmount(e.target.value)}
+                                        disabled={isConfirmingBet}
+                                        className="bg-spaceBlack border border-white/10 rounded-xl px-4 py-3 text-2xl text-white font-black outline-none focus:border-neonGreen transition-colors w-full pr-16"
+                                    />
+                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 font-black text-gray-500 text-lg">OKB</span>
+                                </div>
+                                <div className="mt-2 text-[10px] text-gray-500 font-bold uppercase tracking-wider flex justify-between">
+                                    <span>Min Bet: {minBetAmount} OKB ($1.00)</span>
+                                    <span>1 OKB = ${currentOkbPrice.toFixed(2)}</span>
+                                </div>
+                            </div>
+
+                            {/* Potential Winnings */}
+                            <div className="bg-neonGreen/10 border border-neonGreen/30 rounded-2xl p-5 text-center">
+                                <div className="text-xs text-neonGreen font-bold uppercase tracking-widest mb-1">Potential Winnings</div>
+                                <div className="text-3xl font-black text-white" style={{ textShadow: '0 0 15px rgba(255,255,255,0.2)' }}>
+                                    {(!isNaN(parseFloat(inputBetAmount)) ? (parseFloat(inputBetAmount) * 2).toFixed(4) : '0.0000')} OKB
+                                </div>
+                                <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">2.00x Payout Multiplier</div>
+                            </div>
+
+                            {/* Insufficient Funds Warning */}
+                            {parseFloat(inputBetAmount) > parseFloat(wallet.balance) && (
+                                <div className="text-center text-red-500 font-bold text-xs uppercase tracking-widest animate-pulse">
+                                    ⚠️ Insufficient OKB Balance
+                                </div>
+                            )}
+
+                            {/* Actions */}
+                            <div className="flex gap-4">
+                                <button 
+                                    onClick={handlePlaceBetAndPlay}
+                                    disabled={isConfirmingBet || parseFloat(inputBetAmount) > parseFloat(wallet.balance) || isNaN(parseFloat(inputBetAmount)) || parseFloat(inputBetAmount) <= 0}
+                                    className="flex-1 py-4 bg-neonGreen text-black font-black text-base rounded-xl hover:scale-102 transition-all active:scale-98 disabled:opacity-50 disabled:pointer-events-none shadow-[0_0_20px_rgba(0,255,0,0.2)] flex items-center justify-center gap-2"
+                                >
+                                    {isConfirmingBet ? (
+                                        <>
+                                            <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                                            STAKING...
+                                        </>
+                                    ) : (
+                                        'STAKE & PLAY'
+                                    )}
+                                </button>
+                                <button 
+                                    onClick={() => setShowStakeModal(false)}
+                                    disabled={isConfirmingBet}
+                                    className="px-6 py-4 border border-white/10 hover:border-white/20 text-gray-400 hover:text-white rounded-xl transition-all disabled:opacity-50 disabled:pointer-events-none uppercase tracking-widest text-xs font-bold"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
