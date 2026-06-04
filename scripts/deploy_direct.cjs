@@ -7,8 +7,8 @@ const artifact = JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
 
 async function main() {
     const PRIVATE_KEY = "74c676ce02b2b57d32d385f5efd63f99d79d006ef9e0e5e98721b5bdf12421c3";
-    // Connect to X Layer Testnet
-    const provider = new ethers.providers.JsonRpcProvider("https://testrpc.xlayer.tech");
+    // Connect to X Layer Mainnet
+    const provider = new ethers.providers.JsonRpcProvider("https://rpc.xlayer.tech");
     const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 
     const oracleAddress = "0x491d07ede06eebf25a3a0ff3ce3b78ca78af4aac";

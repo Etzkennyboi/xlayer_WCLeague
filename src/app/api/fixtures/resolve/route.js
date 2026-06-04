@@ -44,7 +44,7 @@ export async function POST(request) {
         // 2. Broadcast resolveMarket transaction on-chain via onchainos
         const iface = new ethers.utils.Interface(ABIS.PredictionMarket);
         const hexData = iface.encodeFunctionData("resolveMarket", [fixtureId, outcomeInt]);
-        const chainId = "1952"; // testrpc.xlayer.tech requires 1952 for internal EIP-155 signing
+        const chainId = "196"; // X Layer Mainnet requires 196 for internal EIP-155 signing
         const command = `onchainos wallet contract-call --to ${CONFIG.PREDICTION_MARKET_ADDRESS} --chain ${chainId} --input-data ${hexData} --force`;
 
         let txOutput = "";

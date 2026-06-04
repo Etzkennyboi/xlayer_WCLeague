@@ -1,6 +1,6 @@
 export const CONFIG = {
-    XLAYER_MAINNET_ID: 195,
-    XLAYER_RPC: 'https://testrpc.xlayer.tech',
+    XLAYER_MAINNET_ID: 196,
+    XLAYER_RPC: 'https://rpc.xlayer.tech',
     PREDICTION_MARKET_ADDRESS: process.env.NEXT_PUBLIC_PREDICTION_MARKET_ADDRESS || '0x25b82B010f5FC38417d1d70f62B0f7b37cB3eCc5',
     WORLD_CUP_NFT_ADDRESS: process.env.NEXT_PUBLIC_WORLD_CUP_NFT_ADDRESS || '0x87493aBD5A738c32c4A1b63Af4E470eA2D704Bc6',
     TREASURY_ADDRESS: process.env.NEXT_PUBLIC_TREASURY_ADDRESS || '0x491d07ede06eebf25a3a0ff3ce3b78ca78af4aac' // Defaulting to the active agentic wallet/treasury
